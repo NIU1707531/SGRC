@@ -5,14 +5,21 @@ public class Pelicula {
     private int duracionMinutos;
 
     public Pelicula(String titulo, int duracionMinutos) {
-        throw new UnsupportedOperationException("Pendiente de implementar");
+        if (titulo == null || titulo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El titulo no puede estar vacio");
+        }
+        if (duracionMinutos <= 0) {
+            throw new IllegalArgumentException("La duracion debe ser mayor a 0");
+        }
+        this.titulo = titulo;
+        this.duracionMinutos = duracionMinutos;
     }
 
     public String getTitulo() {
-        throw new UnsupportedOperationException("Pendiente de implementar");
+        return titulo;
     }
 
     public int getDuracionMinutos() {
-        throw new UnsupportedOperationException("Pendiente de implementar");
+        return duracionMinutos;
     }
 }
