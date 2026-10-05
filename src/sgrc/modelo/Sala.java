@@ -4,24 +4,35 @@ public class Sala {
     private int id;
     private int filas;
     private int columnas;
+    private boolean[][] asientos;
 
     public Sala(int id, int filas, int columnas) {
-        throw new UnsupportedOperationException("Pendiente de implementar");
+        this.id = id;
+        this.filas = filas;
+        this.columnas = columnas;
+        this.asientos = new boolean[filas][columnas];
     }
 
     public int getId() {
-        throw new UnsupportedOperationException("Pendiente de implementar");
+        return id;
     }
 
     public int getCapacidadTotal() {
-        throw new UnsupportedOperationException("Pendiente de implementar");
+        return filas * columnas;
     }
 
     public boolean estaAsientoDisponible(int fila, int columna) {
-        throw new UnsupportedOperationException("Pendiente de implementar");
+        if (fila < 0 || fila >= filas || columna < 0 || columna >= columnas) {
+            throw new IllegalArgumentException("Asiento fuera de los límites de la sala");
+        }
+        return !asientos[fila][columna];
     }
 
     public boolean reservarAsiento(int fila, int columna) {
-        throw new UnsupportedOperationException("Pendiente de implementar");
+        if (!estaAsientoDisponible(fila, columna)) {
+            return false;
+        }
+        asientos[fila][columna] = true;
+        return true;
     }
 }

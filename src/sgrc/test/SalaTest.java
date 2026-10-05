@@ -1,15 +1,16 @@
 package sgrc.test;
 
 import sgrc.modelo.Sala;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import static org.junit.jupiter.api.Assertions.*;
 
-class SalaTest {
+public class SalaTest {
 
     @Test
     @DisplayName("Debe calcular correctamente la capacidad total de la sala")
-    void testCapacidadTotal() {
+    public void testCapacidadTotal() {
         // Arrange
         Sala sala = new Sala(1, 10, 12);
 
@@ -22,7 +23,7 @@ class SalaTest {
 
     @Test
     @DisplayName("Debe permitir reservar un asiento disponible")
-    void testReservarAsientoExitoso() {
+    public void testReservarAsientoExitoso() {
         // Arrange
         Sala sala = new Sala(1, 5, 5);
 
@@ -35,8 +36,8 @@ class SalaTest {
     }
 
     @Test
-    @DisplayName("Debe lanzar excepción al intentar acceder a un asiento fuera de limites")
-    void testAsientoFueraDeLimites() {
+    @DisplayName("Debe lanzar excepciï¿½n al intentar acceder a un asiento fuera de limites")
+    public void testAsientoFueraDeLimites() {
         // Arrange
         Sala sala = new Sala(1, 5, 5);
 
