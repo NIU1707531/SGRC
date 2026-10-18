@@ -7,6 +7,11 @@ public class Sala {
     private boolean[][] asientos;
 
     public Sala(int id, int filas, int columnas) {
+    	//precondicion
+    	if (filas<= 0 ||  columnas <= 0 ) {
+    		throw new IllegalArgumentException("Invalido, minimo crear un asiento");
+    	}
+    	
         this.id = id;
         this.filas = filas;
         this.columnas = columnas;
@@ -23,7 +28,7 @@ public class Sala {
 
     public boolean estaAsientoDisponible(int fila, int columna) {
         if (fila < 0 || fila >= filas || columna < 0 || columna >= columnas) {
-            throw new IllegalArgumentException("Asiento fuera de los límites de la sala");
+            throw new IllegalArgumentException("Asiento fuera de los lï¿½mites de la sala");
         }
         return !asientos[fila][columna];
     }
