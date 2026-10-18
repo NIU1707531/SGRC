@@ -8,6 +8,25 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SalaTest {
 
+	@Test
+	public void testConstructor()
+	{
+		
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Sala(1,0,0);
+		});
+		
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Sala(1,-1,5);
+		});
+		
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Sala(1,-1,-1);
+		});
+		
+		
+	}
+	
     @Test
     @DisplayName("Debe calcular correctamente la capacidad total de la sala")
     public void testCapacidadTotal() {
