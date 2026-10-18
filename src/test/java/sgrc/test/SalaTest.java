@@ -130,6 +130,7 @@ public class SalaTest {
         	
         	sala.reservarAsiento(0, 0);
         	assertTrue(sala.liberarAsiento(0, 0));
+        	assertTrue(sala.estaAsientoDisponible(0, 0));
         }
 
     
