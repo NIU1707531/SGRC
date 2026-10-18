@@ -40,4 +40,14 @@ public class Sala {
         asientos[fila][columna] = true;
         return true;
     }
+    
+    public boolean liberarAsiento(int fila, int columna)
+    {
+    	if(!estaAsientoDisponible(fila,columna))
+    	{
+    		asientos[fila][columna]=false;
+    		return true;
+    	}
+    	return false;
+    }
 }
