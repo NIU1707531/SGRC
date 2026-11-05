@@ -18,30 +18,30 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class ReservaServiceTest {
 
-    @Mock
-    private SalaRepository salaRepositoryMock;
+	@Mock
+	private SalaRepository salaRepositoryMock;
 
-    @InjectMocks
-    private ReservaService reservaService;
+	@InjectMocks
+	private ReservaService reservaService;
 
-    @Test
-    public void testRealizarReservaExitosamente() {
-        Sala sala = new Sala(1, 5, 5);
-        when(salaRepositoryMock.buscarPorId(1)).thenReturn(Optional.of(sala));
+	@Test
+	public void testRealizarReservaExitosamente() {
+		Sala sala = new Sala(1, 5, 5);
+		when(salaRepositoryMock.buscarPorId(1)).thenReturn(Optional.of(sala));
 
-        boolean resultado = reservaService.realizarReserva(1, 2, 2);
+		boolean resultado = reservaService.realizarReserva(1, 2, 2);
 
-        assertTrue(resultado);
-        verify(salaRepositoryMock, times(1)).guardar(sala);
-    }
+		assertTrue(resultado);
+		verify(salaRepositoryMock, times(1)).guardar(sala);
+	}
 
-    @Test
-    public void testRealizarReservaSalaNoEncontrada() {
-        when(salaRepositoryMock.buscarPorId(99)).thenReturn(Optional.empty());
+	@Test
+	public void testRealizarReservaSalaNoEncontrada() {
+		when(salaRepositoryMock.buscarPorId(99)).thenReturn(Optional.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            reservaService.realizarReserva(99, 1, 1);
-        });
-        verify(salaRepositoryMock, never()).guardar(any());
-    }
+		assertThrows(IllegalArgumentException.class, () -> {
+			reservaService.realizarReserva(99, 1, 1);
+		});
+		verify(salaRepositoryMock, never()).guardar(any());
+	}
 }
