@@ -153,4 +153,23 @@ public class ReservaServiceTest {
 	  
 	    verify(salaRepositoryMock, times(1)).guardar(sala);
 	}
+	
+	@Test
+	public void testReservaMultipleListaVacia() {
+
+	  
+	    Sala sala = new Sala(1, 2, 2);
+
+	    when(salaRepositoryMock.buscarPorId(1))
+	        .thenReturn(Optional.of(sala));
+
+	   
+	    List<int[]> asientos = List.of();
+
+	    assertThrows(IllegalArgumentException.class, () -> {
+	    	reservaService.realizarReservaMultiple(1, asientos);
+	    });
+	 
+	    verify(salaRepositoryMock, never()).guardar(any());
+	}
 }
