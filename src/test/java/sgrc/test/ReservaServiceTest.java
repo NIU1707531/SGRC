@@ -120,4 +120,37 @@ public class ReservaServiceTest {
 
 	    verify(salaRepositoryMock, never()).guardar(any());
 	}
+	
+	@Test
+	public void testReservaMultipleExitosa() {
+
+	    
+	    Sala sala = new Sala(1, 1, 3);
+
+	   
+	    when(salaRepositoryMock.buscarPorId(1))
+	        .thenReturn(Optional.of(sala));
+
+	   
+	    List<int[]> asientos = List.of(
+	        new int[]{0, 0},
+	        new int[]{0, 1}
+	    );
+
+	    
+	    boolean resultado = reservaService.realizarReservaMultiple(1, asientos);
+
+	   
+	    assertTrue(resultado);
+
+	  
+	    assertFalse(sala.estaAsientoDisponible(0, 0));
+	    assertFalse(sala.estaAsientoDisponible(0, 1));
+
+	 
+	    assertTrue(sala.estaAsientoDisponible(0, 2));
+
+	  
+	    verify(salaRepositoryMock, times(1)).guardar(sala);
+	}
 }
