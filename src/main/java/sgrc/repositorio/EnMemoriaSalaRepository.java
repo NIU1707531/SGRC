@@ -24,7 +24,7 @@ public class EnMemoriaSalaRepository implements SalaRepository {
 		if(sala==null) {
 			throw new IllegalArgumentException("La sala no puede ser nula");
 		}
-		salas.removeIf(salas->salas.getId()==sala.getId());
+		salas.removeIf(salaGuardada->salaGuardada.getId()==sala.getId());
 		salas.add(sala);
 		
 		
