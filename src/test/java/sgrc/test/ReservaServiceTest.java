@@ -44,4 +44,29 @@ public class ReservaServiceTest {
 		});
 		verify(salaRepositoryMock, never()).guardar(any());
 	}
+	
+	@Test
+	public void testRealizarReservaAsientoOcupado() {
+
+	    // ARRANGE: crear una sala y ocupar el asiento (0,0)
+	    Sala sala = new Sala(1, 2, 2);
+	    sala.reservarAsiento(0, 0);
+
+	    // Configurar el mock para devolver esta sala
+	    when(salaRepositoryMock.buscarPorId(1))
+	        .thenReturn(Optional.of(sala));
+
+	    // ACT: intentar reservar de nuevo el asiento (0,0)
+	    boolean resultado = reservaService.realizarReserva(1, 0, 0);
+	   
+	
+
+	    // ASSERT: comprobar que la reserva devuelve false
+	    assertFalse(resultado);
+
+	    // ASSERT: comprobar con verify(..., never())
+	    verify(salaRepositoryMock, never()).guardar(any());
+	 
+	    
+	}
 }
