@@ -151,7 +151,19 @@ public class SalaTest {
         	assertTrue(sala.liberarAsiento(0, 0));
         	assertTrue(sala.estaAsientoDisponible(0, 0));
         }
+        
+        @Test
+        public void testLiberarAsientoYaLibre() {
 
+        	Sala sala=new Sala(1,2,2);
+
+        	assertFalse(sala.liberarAsiento(0, 0));
+
+        	assertTrue(sala.estaAsientoDisponible(0, 0));
+            
+        }
+        
+        
     
    
 }
