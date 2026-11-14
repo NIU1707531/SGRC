@@ -5,6 +5,7 @@ public class Sala {
     private int filas;
     private int columnas;
     private boolean[][] asientos;
+    
 
     public Sala(int id, int filas, int columnas) {
     	//precondicion
@@ -52,6 +53,13 @@ public class Sala {
     }
     
     public boolean tieneAsientosDisponibles() {
-        return false;
+    	for (int fila = 0; fila < filas; fila++) {
+    	    for (int columna = 0; columna < columnas; columna++) {
+    	       if(!asientos[fila][columna]) {
+    	    	   return true;
+    	       }
+    	    }
+    	}
+    	return false;
     }
 }
