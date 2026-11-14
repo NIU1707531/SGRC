@@ -24,5 +24,20 @@ public class EnMemoriaSalaRepositoryTest {
         assertTrue(resultado.isPresent());
         assertSame(sala, resultado.get());
     }
+    
+    @Test
+    public void testBuscarSalaInexistente() {
+    	 EnMemoriaSalaRepository repositorio = new EnMemoriaSalaRepository();
+         Sala sala = new Sala(1, 2, 2);
+
+         repositorio.guardar(sala);
+    	 Optional<Sala> resultado = repositorio.buscarPorId(99);
+    	 
+    	 assertFalse(resultado.isPresent());
+    	 
+    }
+    
+    
+    
 
 }
