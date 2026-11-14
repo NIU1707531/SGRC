@@ -37,6 +37,17 @@ public class EnMemoriaSalaRepositoryTest {
     	 
     }
     
+    @Test
+    public void testGuardarSalaConIdDuplicado() {
+    	 EnMemoriaSalaRepository repositorio = new EnMemoriaSalaRepository();
+         Sala sala1 = new Sala(1, 2, 2);
+         Sala sala2 = new Sala(1, 5, 5);
+         repositorio.guardar(sala1);
+         repositorio.guardar(sala2);
+         Optional<Sala> resultado = repositorio.buscarPorId(1);
+         assertSame(sala2, resultado.get());
+    }
+    
     
     
 
