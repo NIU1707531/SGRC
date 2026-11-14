@@ -172,4 +172,27 @@ public class ReservaServiceTest {
 	 
 	    verify(salaRepositoryMock, never()).guardar(any());
 	}
+	
+	@Test
+	public void testReservaMultipleCoordenadasInvalidas() {
+
+	    Sala sala = new Sala(1, 2, 2);
+
+	    when(salaRepositoryMock.buscarPorId(1))
+	        .thenReturn(Optional.of(sala));
+
+	    List<int[]> asientos = List.of(
+	        new int[]{0, 0},
+	        new int[]{2, 0}
+	    );
+
+	    assertThrows(IllegalArgumentException.class, () -> {
+	        reservaService.realizarReservaMultiple(1, asientos);
+	    });
+
+	    assertTrue(sala.estaAsientoDisponible(0, 0));
+
+	    verify(salaRepositoryMock, never()).guardar(any());
+	}
+	
 }
