@@ -1,6 +1,7 @@
 package sgrc.servicio;
 
 import sgrc.modelo.Sala;
+import java.util.List;
 import sgrc.repositorio.SalaRepository;
 
 public class ReservaService {
@@ -20,4 +21,8 @@ public class ReservaService {
         }
         return exito;
     }
+    public boolean realizarReservaMultiple(int salaId, List<int[]> asientos) {
+        return true;
+    }
+    
 }

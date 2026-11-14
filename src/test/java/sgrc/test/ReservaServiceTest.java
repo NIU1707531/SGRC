@@ -1,6 +1,7 @@
 package sgrc.test;
 
 import sgrc.modelo.Sala;
+import java.util.List;
 import sgrc.repositorio.SalaRepository;
 import sgrc.servicio.ReservaService;
 
@@ -88,6 +89,35 @@ public class ReservaServiceTest {
 	    });
 
 	    // ASSERT: comprobar que no se guarda la reserva
+	    verify(salaRepositoryMock, never()).guardar(any());
+	}
+	
+	@Test
+	public void testReservaMultipleConAsientoOcupado() {
+
+	    // ARRANGE
+	    Sala sala = new Sala(1, 1, 3);
+	    sala.reservarAsiento(0, 2);
+
+	    when(salaRepositoryMock.buscarPorId(1))
+	        .thenReturn(Optional.of(sala));
+
+	    List<int[]> asientos = List.of(
+	        new int[]{0, 0},
+	        new int[]{0, 1},
+	        new int[]{0, 2}
+	    );
+
+
+	    boolean resultado = reservaService.realizarReservaMultiple(1, asientos);
+
+	    // ASSERT
+	    // Comprobar que el resultado es false.
+	    assertFalse(resultado);
+	    assertTrue(sala.estaAsientoDisponible(0, 0));
+	    assertTrue(sala.estaAsientoDisponible(0, 1));
+	    assertFalse(sala.estaAsientoDisponible(0, 2));
+
 	    verify(salaRepositoryMock, never()).guardar(any());
 	}
 }
