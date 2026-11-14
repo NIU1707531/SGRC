@@ -172,6 +172,17 @@ public class SalaTest {
             
         }
         
+        @Test
+        public void testLiberarAsientoFueraDeLimites()
+        {
+        	Sala sala=new Sala(1,2,2);
+
+        	assertThrows(IllegalArgumentException.class,()->
+        	{sala.liberarAsiento(0, 2);
+        		});
+     
+        }
+        
         
     
    
