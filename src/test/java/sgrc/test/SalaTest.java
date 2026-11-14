@@ -24,6 +24,15 @@ public class SalaTest {
 			new Sala(1,-1,-1);
 		});
 		
+	
+		assertThrows(IllegalArgumentException.class, () -> {
+		    new Sala(1,5,0);
+		});
+
+		
+		assertDoesNotThrow(() -> {
+		   new Sala(1,1,1);
+		});
 		
 	}
 	
