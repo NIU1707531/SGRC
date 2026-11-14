@@ -182,6 +182,21 @@ public class SalaTest {
         		});
      
         }
+        @Test
+        public void testTieneAsientosDisponibles() {
+
+            // ARRANGE
+            Sala sala = new Sala(1, 1, 1);
+
+            // ASSERT
+            assertTrue(sala.tieneAsientosDisponibles());
+
+            // ACT
+            sala.reservarAsiento(0, 0);
+
+            // ASSERT
+            assertFalse(sala.tieneAsientosDisponibles());
+        }
         
         
     
