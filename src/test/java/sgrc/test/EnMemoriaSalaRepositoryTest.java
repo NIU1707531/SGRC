@@ -47,6 +47,17 @@ public class EnMemoriaSalaRepositoryTest {
          Optional<Sala> resultado = repositorio.buscarPorId(1);
          assertSame(sala2, resultado.get());
     }
+    @Test
+    public void testGuardarSalaNula() {
+        // Crear un repositorio vacío
+
+   	 EnMemoriaSalaRepository repositorio = new EnMemoriaSalaRepository();
+ 
+        //lanza IllegalArgumentException
+   	assertThrows(IllegalArgumentException.class, () -> {
+   	    repositorio.guardar(null);
+   	});
+    }
     
     
     
