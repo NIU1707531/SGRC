@@ -21,6 +21,9 @@ public class EnMemoriaSalaRepository implements SalaRepository {
 
 	@Override
 	public void guardar(Sala sala) {
+		if(sala==null) {
+			throw new IllegalArgumentException("La sala no puede ser nula");
+		}
 		salas.removeIf(salas->salas.getId()==sala.getId());
 		salas.add(sala);
 		
