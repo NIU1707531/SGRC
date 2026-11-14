@@ -69,4 +69,25 @@ public class ReservaServiceTest {
 	 
 	    
 	}
+	
+	@Test
+	public void testRealizarReservaCoordenadasInvalidas() {
+
+	    // ARRANGE: crear una sala de 2x2
+	    Sala sala = new Sala(1, 2, 2);
+
+	    // Configurar el mock para devolver esa sala
+	    when(salaRepositoryMock.buscarPorId(1))
+	        .thenReturn(Optional.of(sala));
+
+	
+	
+	   
+	    assertThrows(IllegalArgumentException.class, () -> {
+	        reservaService.realizarReserva(1, 2, 0);
+	    });
+
+	    // ASSERT: comprobar que no se guarda la reserva
+	    verify(salaRepositoryMock, never()).guardar(any());
+	}
 }
