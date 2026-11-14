@@ -26,9 +26,13 @@ public class EnMemoriaSalaRepository implements SalaRepository {
 		}
 		salas.removeIf(salaGuardada->salaGuardada.getId()==sala.getId());
 		salas.add(sala);
-		
-		
-
 	}
+	
+	@Override
+	public List<Sala> obtenerSalasDisponibles() {
+	    return new ArrayList<>();
+	}
+	
+	
 
 }

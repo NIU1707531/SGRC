@@ -4,6 +4,7 @@ import sgrc.repositorio.EnMemoriaSalaRepository;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
 import java.util.Optional;
 
@@ -78,6 +79,28 @@ public class EnMemoriaSalaRepositoryTest {
         assertSame(sala2, resultado2.get());
     }
     
+    @Test
+    public void testObtenerSalasDisponibles() {
+        EnMemoriaSalaRepository repositorio = new EnMemoriaSalaRepository();
+
+        Sala sala1 = new Sala(1, 1, 1);
+        Sala sala2 = new Sala(2, 2, 2);
+        Sala sala3 = new Sala(3, 1, 2);
+        repositorio.guardar(sala1);
+        repositorio.guardar(sala2);
+        repositorio.guardar(sala3);
+        sala1.reservarAsiento(0, 0); // Sala 1: completamente ocupada
+        sala3.reservarAsiento(0, 0); // Sala 3: queda un asiento libre
+        List<Sala> resultado = repositorio.obtenerSalasDisponibles();
+        assertFalse(resultado.contains(sala1));
+        
+        assertEquals(2, resultado.size());
+
+        assertTrue(resultado.contains(sala2));
+
+        assertTrue(resultado.contains(sala3));
+        
+    }
     
     
 
