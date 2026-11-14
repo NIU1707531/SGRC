@@ -30,7 +30,15 @@ public class EnMemoriaSalaRepository implements SalaRepository {
 	
 	@Override
 	public List<Sala> obtenerSalasDisponibles() {
-	    return new ArrayList<>();
+		List<Sala> dispo=new ArrayList<>();
+		for (Sala sala : salas) {
+		    // Comprobar si tiene asientos disponibles
+			if(sala.tieneAsientosDisponibles()) {
+				dispo.add(sala);
+			}
+		    
+		}
+		return dispo;
 	}
 	
 	
