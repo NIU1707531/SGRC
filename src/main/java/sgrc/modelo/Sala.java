@@ -50,4 +50,8 @@ public class Sala {
     	}
     	return false;
     }
+    
+    public boolean tieneAsientosDisponibles() {
+        return false;
+    }
 }
