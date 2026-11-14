@@ -21,7 +21,10 @@ public class EnMemoriaSalaRepository implements SalaRepository {
 
 	@Override
 	public void guardar(Sala sala) {
+		salas.removeIf(salas->salas.getId()==sala.getId());
 		salas.add(sala);
+		
+		
 
 	}
 
