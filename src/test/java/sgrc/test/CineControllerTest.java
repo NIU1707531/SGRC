@@ -215,4 +215,29 @@ public class CineControllerTest {
         assertTrue(cineController.procesarOpcion(CineController.OPCION_CANCELAR));
         verify(vista).mostrarError(anyString());
     }
+
+    // ---------- Reserva múltiple ----------
+
+    @Test
+    public void testOpcionReservaMultipleLeeTodosLosAsientos() {
+        // sala 1, 2 asientos: (1,1) y (1,2) -> índices (0,0) y (0,1)
+        when(vista.leerEntero(anyString())).thenReturn(1, 2, 1, 1, 1, 2);
+        when(reservaService.realizarReservaMultiple(eq(1), anyList())).thenReturn(true);
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_RESERVAR_VARIOS));
+
+        verify(reservaService).realizarReservaMultiple(eq(1), argThat(lista -> lista.size() == 2
+                && lista.get(0)[0] == 0 && lista.get(0)[1] == 0
+                && lista.get(1)[0] == 0 && lista.get(1)[1] == 1));
+        verify(vista).mostrarMensaje(anyString());
+    }
+
+    @Test
+    public void testOpcionReservaMultipleRechazadaMuestraError() {
+        when(vista.leerEntero(anyString())).thenReturn(1, 1, 1, 1);
+        when(reservaService.realizarReservaMultiple(eq(1), anyList())).thenReturn(false);
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_RESERVAR_VARIOS));
+        verify(vista).mostrarError(anyString());
+    }
 }
