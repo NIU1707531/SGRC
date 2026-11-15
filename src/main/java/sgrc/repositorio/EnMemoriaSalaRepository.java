@@ -40,7 +40,9 @@ public class EnMemoriaSalaRepository implements SalaRepository {
 		}
 		return dispo;
 	}
-	
-	
 
+	@Override
+	public List<Sala> obtenerTodas() {
+		return new ArrayList<>(salas);
+	}
 }
