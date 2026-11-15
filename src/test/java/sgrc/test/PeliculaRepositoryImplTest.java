@@ -144,4 +144,12 @@ public class PeliculaRepositoryImplTest {
         repositorio.eliminar(null);
         assertEquals(1, repositorio.obtenerTodas().size());
     }
+
+    @Test
+    @DisplayName("eliminar: ignora los espacios exteriores del título")
+    public void testEliminarConEspacios() {
+        repositorio.guardar(new Pelicula("Inception", 148));
+        repositorio.eliminar("  Inception ");
+        assertTrue(repositorio.obtenerTodas().isEmpty());
+    }
 }
