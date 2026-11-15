@@ -220,4 +220,73 @@ public class ReservaServiceTest {
 	    verify(salaRepositoryMock, never()).guardar(any());
 	}
 	
+	// =====================================================================
+	// CAJA BLANCA - PATH COVERAGE de realizarReservaMultiple
+	// (diagrama de flujo en docs/GUIA-INFORME.md)
+	//   Camino 1: la sala no existe                         -> excepción
+	//   Camino 2: lista null o vacía                         -> excepción
+	//   Camino 3: posición null o longitud != 2              -> excepción
+	//   Camino 4: coordenada duplicada                       -> false
+	//   Camino 5: asiento ocupado                            -> false
+	//   Camino 6: asiento fuera de límites                   -> excepción (desde Sala)
+	//   Camino 7: todos libres -> reserva + guardar          -> true
+	// Caminos 2, 4, 5, 6 y 7: tests anteriores (ListaVacia, CoordenadasDuplicadas,
+	// ConAsientoOcupado, CoordenadasInvalidas y ReservaMultipleExitosa).
+	// =====================================================================
+
+	@Test
+	public void testReservaMultipleSalaNoExiste() {
+		// Camino 1: buscarPorId devuelve vacío
+		when(salaRepositoryMock.buscarPorId(7)).thenReturn(Optional.empty());
+
+		assertThrows(IllegalArgumentException.class,
+				() -> reservaService.realizarReservaMultiple(7, List.of(new int[]{0, 0})));
+		verify(salaRepositoryMock, never()).guardar(any());
+	}
+
+	// CAJA BLANCA - DECISION + CONDITION COVERAGE de las decisiones de realizarReservaMultiple
+	// D2: (asientos == null || asientos.isEmpty())   -> C1 || C2
+	//     null -> C1=T | vacía -> C1=F,C2=T | con elementos -> C1=F,C2=F
+	// D3: (posicion == null || posicion.length != 2) -> C3 || C4
+	//     null -> C3=T | {0} -> C3=F,C4=T | {0,0,0} -> C3=F,C4=T | {0,0} -> C3=F,C4=F
+
+	@Test
+	public void testReservaMultipleListaNula() {
+		// Camino 2 con C1 = true
+		when(salaRepositoryMock.buscarPorId(1)).thenReturn(Optional.of(new Sala(1, 2, 2)));
+
+		assertThrows(IllegalArgumentException.class, () -> reservaService.realizarReservaMultiple(1, null));
+		verify(salaRepositoryMock, never()).guardar(any());
+	}
+
+	@Test
+	public void testReservaMultiplePosicionNula() {
+		// Camino 3 con C3 = true
+		when(salaRepositoryMock.buscarPorId(1)).thenReturn(Optional.of(new Sala(1, 2, 2)));
+		List<int[]> asientos = new java.util.ArrayList<>();
+		asientos.add(null);
+
+		assertThrows(IllegalArgumentException.class, () -> reservaService.realizarReservaMultiple(1, asientos));
+		verify(salaRepositoryMock, never()).guardar(any());
+	}
+
+	@Test
+	public void testReservaMultiplePosicionUnaCoordenada() {
+		// Camino 3 con C3 = false, C4 = true (longitud 1: frontera inferior de 2)
+		when(salaRepositoryMock.buscarPorId(1)).thenReturn(Optional.of(new Sala(1, 2, 2)));
+
+		assertThrows(IllegalArgumentException.class,
+				() -> reservaService.realizarReservaMultiple(1, List.of(new int[]{0})));
+		verify(salaRepositoryMock, never()).guardar(any());
+	}
+
+	@Test
+	public void testReservaMultiplePosicionTresCoordenadas() {
+		// Camino 3 con C3 = false, C4 = true (longitud 3: frontera superior de 2)
+		when(salaRepositoryMock.buscarPorId(1)).thenReturn(Optional.of(new Sala(1, 2, 2)));
+
+		assertThrows(IllegalArgumentException.class,
+				() -> reservaService.realizarReservaMultiple(1, List.of(new int[]{0, 0, 0})));
+		verify(salaRepositoryMock, never()).guardar(any());
+	}
 }
