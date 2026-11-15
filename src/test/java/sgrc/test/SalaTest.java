@@ -75,7 +75,7 @@ public class SalaTest {
     
     
     @Test
-    @DisplayName("Debe lanzar excepci�n al intentar acceder a un asiento fuera de limites")
+    @DisplayName("Debe lanzar excepción al intentar acceder a un asiento fuera de limites")
     public void testAsientoFueraDeLimites() {
         // Arrange
         Sala sala = new Sala(1, 5, 5);
@@ -87,7 +87,7 @@ public class SalaTest {
     }
         
         @Test
-        @DisplayName("Debe lanzar excepci�n al intentar acceder a un asiento fuera de limites (colum -1)")
+        @DisplayName("Debe lanzar excepción al intentar acceder a un asiento fuera de limites (colum -1)")
         public void testAsientoColumnaInvalidaNegativa() {
             // Arrange
             Sala sala = new Sala(1, 5, 5);
@@ -99,7 +99,7 @@ public class SalaTest {
     }
         
         @Test
-        @DisplayName("Debe lanzar excepci�n al intentar acceder a un asiento fuera de limites (colum 5)")
+        @DisplayName("Debe lanzar excepción al intentar acceder a un asiento fuera de limites (colum 5)")
         public void testAsientoColumnaInvalida() {
             // Arrange
             Sala sala = new Sala(1, 5, 5);
@@ -111,7 +111,7 @@ public class SalaTest {
     }
      
         @Test
-        @DisplayName("Debe lanzar excepci�n al intentar acceder a un asiento fuera de limites (fila -1)")
+        @DisplayName("Debe lanzar excepción al intentar acceder a un asiento fuera de limites (fila -1)")
         public void testAsientoFilaInvalidaNegativa() {
             // Arrange
             Sala sala = new Sala(1, 5, 5);
@@ -123,7 +123,7 @@ public class SalaTest {
     }
         
         @Test
-        @DisplayName("Debe lanzar excepci�n al intentar acceder a un asiento fuera de limites (fila 5)")
+        @DisplayName("Debe lanzar excepción al intentar acceder a un asiento fuera de limites (fila 5)")
         public void testAsientoFilaInvalida() {
             // Arrange
             Sala sala = new Sala(1, 5, 5);
@@ -143,7 +143,7 @@ public class SalaTest {
             assertTrue(sala.estaAsientoDisponible(0, 0));
     }
         @Test
-        @DisplayName("Intentar acceder a un asiento frontera (4")
+        @DisplayName("Intentar acceder a un asiento frontera (4)")
         public void testAsientoFronteraExteriorValida() {
             // Arrange
             Sala sala = new Sala(1, 5, 5);
