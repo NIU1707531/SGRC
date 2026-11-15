@@ -289,4 +289,12 @@ public class ReservaServiceTest {
 				() -> reservaService.realizarReservaMultiple(1, List.of(new int[]{0, 0, 0})));
 		verify(salaRepositoryMock, never()).guardar(any());
 	}
+
+	// ===================== Contrato: precondición del constructor =====================
+
+	@Test
+	public void testConstructorRepositorioNulo() {
+		// Partición inválida: sin repositorio el servicio no puede funcionar
+		assertThrows(IllegalArgumentException.class, () -> new ReservaService(null));
+	}
 }
