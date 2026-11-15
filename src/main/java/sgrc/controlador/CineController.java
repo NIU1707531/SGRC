@@ -11,6 +11,8 @@ public class CineController {
     public static final int OPCION_VER_CARTELERA = 1;
     public static final int OPCION_ANADIR_PELICULA = 2;
     public static final int OPCION_ELIMINAR_PELICULA = 3;
+    public static final int OPCION_VER_SALAS = 4;
+    public static final int OPCION_VER_SALA = 5;
 
     private final CarteleraService carteleraService;
     private final ReservaService reservaService;
@@ -46,6 +48,12 @@ public class CineController {
                     break;
                 case OPCION_ELIMINAR_PELICULA:
                     eliminarPelicula();
+                    break;
+                case OPCION_VER_SALAS:
+                    vista.mostrarSalas(reservaService.obtenerSalasDisponibles());
+                    break;
+                case OPCION_VER_SALA:
+                    vista.mostrarSala(reservaService.obtenerSala(vista.leerEntero("Número de sala: ")));
                     break;
                 default:
                     vista.mostrarError("Opción no válida");
