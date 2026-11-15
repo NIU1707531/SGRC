@@ -12,6 +12,7 @@ public class ConsolaVista implements Vista {
 		System.out.println("1. Ver cartelera");
 		System.out.println("2. Añadir película");
 		System.out.println("3. Eliminar película");
+		System.out.println("4. Ver salas disponibles");
 
 	}
 
