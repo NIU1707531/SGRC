@@ -9,6 +9,9 @@ public class Sala {
 
     public Sala(int id, int filas, int columnas) {
     	//precondicion
+    	if (id <= 0) {
+    		throw new IllegalArgumentException("El id de la sala debe ser positivo");
+    	}
     	if (filas<= 0 ||  columnas <= 0 ) {
     		throw new IllegalArgumentException("Invalido, minimo crear un asiento");
     	}
