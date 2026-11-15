@@ -1,11 +1,13 @@
 package sgrc.vista;
 
 import java.util.List;
+import java.util.Scanner;
 
 import sgrc.modelo.Pelicula;
 import sgrc.modelo.Sala;
 
 public class ConsolaVista implements Vista {
+	private final Scanner scanner = new Scanner(System.in);
 
 	@Override
 	public void mostrarMenu() {
@@ -22,8 +24,7 @@ public class ConsolaVista implements Vista {
 
 	@Override
 	public int leerOpcion() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Integer.parseInt(scanner.nextLine().trim());
 	}
 
 	@Override
