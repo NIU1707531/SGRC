@@ -169,6 +169,21 @@ public class EnMemoriaSalaRepositoryTest {
         assertEquals(1, repositorio.obtenerSalasDisponibles().size());
     }
 
+    // ===================== obtenerTodas (caja negra) =====================
+    // Valores límite del número de salas: 0 y varias (incluidas salas llenas)
+
+    @Test
+    public void testObtenerTodasVacio() {
+        assertTrue(new EnMemoriaSalaRepository().obtenerTodas().isEmpty());
+    }
+
+    @Test
+    public void testObtenerTodasIncluyeSalasLlenas() {
+        EnMemoriaSalaRepository repositorio = repositorioConSalas(2);
+        repositorio.buscarPorId(1).get().reservarAsiento(0, 0); // sala 1 llena
+        assertEquals(2, repositorio.obtenerTodas().size());
+    }
+
     // Crea un repositorio con n salas 1x1 de ids 1..n
     private EnMemoriaSalaRepository repositorioConSalas(int n) {
         EnMemoriaSalaRepository repositorio = new EnMemoriaSalaRepository();
