@@ -338,4 +338,39 @@ public class ReservaServiceTest {
 		assertThrows(IllegalArgumentException.class, () -> reservaService.cancelarReserva(1, 0, 2));
 		verify(salaRepositoryMock, never()).guardar(any());
 	}
+
+	// ===================== Consultas de salas (usadas por el controlador) =====================
+
+	@Test
+	public void testObtenerSalaExistente() {
+		Sala sala = new Sala(3, 2, 2);
+		when(salaRepositoryMock.buscarPorId(3)).thenReturn(Optional.of(sala));
+
+		assertSame(sala, reservaService.obtenerSala(3));
+	}
+
+	@Test
+	public void testObtenerSalaInexistente() {
+		when(salaRepositoryMock.buscarPorId(3)).thenReturn(Optional.empty());
+
+		assertThrows(IllegalArgumentException.class, () -> reservaService.obtenerSala(3));
+	}
+
+	@Test
+	public void testObtenerSalasDelegaEnRepositorio() {
+		List<Sala> salas = List.of(new Sala(1, 1, 1), new Sala(2, 1, 1));
+		when(salaRepositoryMock.obtenerTodas()).thenReturn(salas);
+
+		assertEquals(salas, reservaService.obtenerSalas());
+		verify(salaRepositoryMock, times(1)).obtenerTodas();
+	}
+
+	@Test
+	public void testObtenerSalasDisponiblesDelegaEnRepositorio() {
+		List<Sala> salas = List.of(new Sala(1, 1, 1));
+		when(salaRepositoryMock.obtenerSalasDisponibles()).thenReturn(salas);
+
+		assertEquals(salas, reservaService.obtenerSalasDisponibles());
+		verify(salaRepositoryMock, times(1)).obtenerSalasDisponibles();
+	}
 }
