@@ -259,4 +259,21 @@ public class SalaTest {
         
     
    
+
+    // ===================== contarAsientosLibres =====================
+
+    @Test
+    @DisplayName("Sala nueva: todos los asientos están libres")
+    public void testContarAsientosLibresSalaNueva() {
+        Sala sala = new Sala(1, 3, 4);
+        assertEquals(12, sala.contarAsientosLibres());
+    }
+
+    @Test
+    @DisplayName("Tras reservar un asiento, hay uno libre menos")
+    public void testContarAsientosLibresTrasReservar() {
+        Sala sala = new Sala(1, 3, 4);
+        sala.reservarAsiento(1, 2);
+        assertEquals(11, sala.contarAsientosLibres());
+    }
 }
