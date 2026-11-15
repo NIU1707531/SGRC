@@ -4,6 +4,7 @@ import sgrc.modelo.Pelicula;
 import sgrc.servicio.CarteleraService;
 import sgrc.servicio.ReservaService;
 import sgrc.vista.Vista;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CineController {
@@ -14,6 +15,7 @@ public class CineController {
     public static final int OPCION_VER_SALAS = 4;
     public static final int OPCION_VER_SALA = 5;
     public static final int OPCION_RESERVAR = 6;
+    public static final int OPCION_RESERVAR_VARIOS = 7;
     public static final int OPCION_CANCELAR = 8;
 
     private final CarteleraService carteleraService;
@@ -59,6 +61,9 @@ public class CineController {
                     break;
                 case OPCION_RESERVAR:
                     reservarAsiento();
+                    break;
+                case OPCION_RESERVAR_VARIOS:
+                    reservarVariosAsientos();
                     break;
                 case OPCION_CANCELAR:
                     cancelarReserva();
@@ -107,6 +112,23 @@ public class CineController {
             vista.mostrarMensaje("Reserva cancelada");
         } else {
             vista.mostrarError("El asiento no estaba reservado");
+        }
+    }
+
+    private void reservarVariosAsientos() {
+        int salaId = vista.leerEntero("Número de sala: ");
+        int cantidad = vista.leerEntero("¿Cuántos asientos quieres reservar? ");
+        List<int[]> asientos = new ArrayList<>();
+        // Bucle simple: se leen 'cantidad' asientos
+        for (int i = 0; i < cantidad; i++) {
+            int fila = vista.leerEntero("Fila del asiento " + (i + 1) + ": ") - 1;
+            int columna = vista.leerEntero("Asiento " + (i + 1) + ": ") - 1;
+            asientos.add(new int[]{fila, columna});
+        }
+        if (reservaService.realizarReservaMultiple(salaId, asientos)) {
+            vista.mostrarMensaje("Reserva de " + cantidad + " asientos realizada");
+        } else {
+            vista.mostrarError("Algún asiento está ocupado o repetido: no se ha reservado ninguno");
         }
     }
 }
