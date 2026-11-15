@@ -11,6 +11,7 @@ public class ConsolaVista implements Vista {
 	public void mostrarMenu() {
 		System.out.println("1. Ver cartelera");
 		System.out.println("2. Añadir película");
+		System.out.println("3. Eliminar película");
 
 	}
 
