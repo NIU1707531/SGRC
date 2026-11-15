@@ -9,7 +9,7 @@ public class ConsolaVista implements Vista {
 
 	@Override
 	public void mostrarMenu() {
-		// TODO Auto-generated method stub
+		System.out.println("1. Ver cartelera");
 
 	}
 
