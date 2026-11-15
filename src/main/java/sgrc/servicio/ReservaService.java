@@ -66,5 +66,15 @@ public class ReservaService {
 
         return true;
     }
-    
+
+    public boolean cancelarReserva(int salaId, int fila, int columna) {
+        Sala sala = salaRepository.buscarPorId(salaId)
+                .orElseThrow(() -> new IllegalArgumentException("La sala no existe"));
+
+        boolean exito = sala.liberarAsiento(fila, columna);
+        if (exito) {
+            salaRepository.guardar(sala);
+        }
+        return exito;
+    }
 }
