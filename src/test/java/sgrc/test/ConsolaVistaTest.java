@@ -6,6 +6,8 @@ import sgrc.vista.ConsolaVista;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 public class ConsolaVistaTest {
 	
 	@Test
@@ -36,6 +38,23 @@ public class ConsolaVistaTest {
 		assertTrue(texto.contains("0. Salir"));
 	}
 	
+	@Test
+	public void testLeerOpcion() {
+	    ByteArrayInputStream entrada = new ByteArrayInputStream("2\n".getBytes());
+	    InputStream entradaOriginal = System.in;
+
+	    try {
+	        System.setIn(entrada);
+
+	        ConsolaVista vista = new ConsolaVista();
+	        int opcion = vista.leerOpcion();
+
+	        assertEquals(2, opcion);
+
+	    } finally {
+	        System.setIn(entradaOriginal);
+	    }
+	}
 	
 	
 	
