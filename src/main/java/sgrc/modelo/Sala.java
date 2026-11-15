@@ -29,7 +29,7 @@ public class Sala {
 
     public boolean estaAsientoDisponible(int fila, int columna) {
         if (fila < 0 || fila >= filas || columna < 0 || columna >= columnas) {
-            throw new IllegalArgumentException("Asiento fuera de los l�mites de la sala");
+            throw new IllegalArgumentException("Asiento fuera de los límites de la sala");
         }
         return !asientos[fila][columna];
     }
