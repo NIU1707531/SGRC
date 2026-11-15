@@ -83,6 +83,14 @@ public class PeliculaRepositoryImplTest {
         assertEquals(Optional.empty(), repositorio.buscarPorTitulo("   "));
     }
 
+    @Test
+    @DisplayName("buscarPorTitulo: ignora los espacios exteriores del título buscado")
+    public void testBuscarPorTituloConEspacios() {
+        Pelicula pelicula = new Pelicula("Inception", 148);
+        repositorio.guardar(pelicula);
+        assertSame(pelicula, repositorio.buscarPorTitulo("  inception  ").get());
+    }
+
     // ===================== obtenerTodas =====================
     // Valores límite del tamaño de la lista: 0, 1 y varios elementos
 
