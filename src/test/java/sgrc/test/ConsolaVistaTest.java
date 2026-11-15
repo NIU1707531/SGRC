@@ -26,6 +26,7 @@ public class ConsolaVistaTest {
 
 		}
 		assertTrue(texto.contains("1. Ver cartelera"));
+		assertTrue(texto.contains("2. Añadir película"));
 		
 	}
 	
