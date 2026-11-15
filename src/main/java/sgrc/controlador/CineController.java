@@ -13,6 +13,8 @@ public class CineController {
     public static final int OPCION_ELIMINAR_PELICULA = 3;
     public static final int OPCION_VER_SALAS = 4;
     public static final int OPCION_VER_SALA = 5;
+    public static final int OPCION_RESERVAR = 6;
+    public static final int OPCION_CANCELAR = 8;
 
     private final CarteleraService carteleraService;
     private final ReservaService reservaService;
@@ -55,6 +57,12 @@ public class CineController {
                 case OPCION_VER_SALA:
                     vista.mostrarSala(reservaService.obtenerSala(vista.leerEntero("Número de sala: ")));
                     break;
+                case OPCION_RESERVAR:
+                    reservarAsiento();
+                    break;
+                case OPCION_CANCELAR:
+                    cancelarReserva();
+                    break;
                 default:
                     vista.mostrarError("Opción no válida");
             }
@@ -77,6 +85,28 @@ public class CineController {
             vista.mostrarMensaje("Película eliminada");
         } else {
             vista.mostrarError("No existe ninguna película con ese título");
+        }
+    }
+
+    private void reservarAsiento() {
+        int salaId = vista.leerEntero("Número de sala: ");
+        int fila = vista.leerEntero("Fila: ") - 1;
+        int columna = vista.leerEntero("Asiento: ") - 1;
+        if (reservaService.realizarReserva(salaId, fila, columna)) {
+            vista.mostrarMensaje("Reserva realizada");
+        } else {
+            vista.mostrarError("El asiento ya está ocupado");
+        }
+    }
+
+    private void cancelarReserva() {
+        int salaId = vista.leerEntero("Número de sala: ");
+        int fila = vista.leerEntero("Fila: ") - 1;
+        int columna = vista.leerEntero("Asiento: ") - 1;
+        if (reservaService.cancelarReserva(salaId, fila, columna)) {
+            vista.mostrarMensaje("Reserva cancelada");
+        } else {
+            vista.mostrarError("El asiento no estaba reservado");
         }
     }
 }
