@@ -96,4 +96,10 @@ public class PeliculaTest {
 		assertThrows(IllegalArgumentException.class, () -> new Pelicula("X", 601));   // D
 		assertDoesNotThrow(() -> new Pelicula("X", 100));                            // E
 	}
+
+	@Test
+	@DisplayName("El título se guarda sin espacios al principio ni al final")
+	public void testTituloSeNormalizaSinEspacios() {
+		assertEquals("Dune", new Pelicula("  Dune  ", 155).getTitulo());
+	}
 }
