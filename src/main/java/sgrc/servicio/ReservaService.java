@@ -77,4 +77,17 @@ public class ReservaService {
         }
         return exito;
     }
+
+    public Sala obtenerSala(int salaId) {
+        return salaRepository.buscarPorId(salaId)
+                .orElseThrow(() -> new IllegalArgumentException("La sala no existe"));
+    }
+
+    public List<Sala> obtenerSalas() {
+        return salaRepository.obtenerTodas();
+    }
+
+    public List<Sala> obtenerSalasDisponibles() {
+        return salaRepository.obtenerSalasDisponibles();
+    }
 }
