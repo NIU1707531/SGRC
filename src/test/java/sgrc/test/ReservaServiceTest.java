@@ -16,6 +16,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Tests de ReservaService (Model) con un MOCK OBJECT de Mockito de SalaRepository:
+ * el servicio se prueba aislado de la implementación real del repositorio.
+ * verify() comprueba si el servicio guarda (o no) la sala en cada caso.
+ */
 @ExtendWith(MockitoExtension.class)
 public class ReservaServiceTest {
 
@@ -25,6 +30,7 @@ public class ReservaServiceTest {
 	@InjectMocks
 	private ReservaService reservaService;
 
+	// Caja negra - partición válida: sala existente y asiento libre -> se reserva y se guarda
 	@Test
 	public void testRealizarReservaExitosamente() {
 		Sala sala = new Sala(1, 5, 5);
@@ -36,6 +42,7 @@ public class ReservaServiceTest {
 		verify(salaRepositoryMock, times(1)).guardar(sala);
 	}
 
+	// Caja negra - partición inválida: la sala no existe -> excepción y no se guarda nada
 	@Test
 	public void testRealizarReservaSalaNoEncontrada() {
 		when(salaRepositoryMock.buscarPorId(99)).thenReturn(Optional.empty());
@@ -46,6 +53,7 @@ public class ReservaServiceTest {
 		verify(salaRepositoryMock, never()).guardar(any());
 	}
 	
+	// Caja negra - partición: asiento ya ocupado -> false y no se guarda
 	@Test
 	public void testRealizarReservaAsientoOcupado() {
 
@@ -71,6 +79,7 @@ public class ReservaServiceTest {
 	    
 	}
 	
+	// Caja negra - valor límite exterior: fila = filas (2 en una sala 2x2) -> excepción
 	@Test
 	public void testRealizarReservaCoordenadasInvalidas() {
 
@@ -92,6 +101,7 @@ public class ReservaServiceTest {
 	    verify(salaRepositoryMock, never()).guardar(any());
 	}
 	
+	// Camino 5: un asiento ocupado -> false y la reserva es atómica (no se reserva ninguno)
 	@Test
 	public void testReservaMultipleConAsientoOcupado() {
 
@@ -121,6 +131,7 @@ public class ReservaServiceTest {
 	    verify(salaRepositoryMock, never()).guardar(any());
 	}
 	
+	// Camino 7: todos los asientos libres -> se reservan todos y se guarda una vez
 	@Test
 	public void testReservaMultipleExitosa() {
 
@@ -154,6 +165,7 @@ public class ReservaServiceTest {
 	    verify(salaRepositoryMock, times(1)).guardar(sala);
 	}
 	
+	// Camino 2 (C1=F, C2=T) - valor límite: lista con 0 asientos -> excepción
 	@Test
 	public void testReservaMultipleListaVacia() {
 
@@ -173,6 +185,7 @@ public class ReservaServiceTest {
 	    verify(salaRepositoryMock, never()).guardar(any());
 	}
 	
+	// Camino 6: un asiento fuera de límites -> excepción y no se reserva ninguno
 	@Test
 	public void testReservaMultipleCoordenadasInvalidas() {
 
@@ -195,6 +208,7 @@ public class ReservaServiceTest {
 	    verify(salaRepositoryMock, never()).guardar(any());
 	}
 	
+	// Camino 4: coordenada repetida -> false y no se reserva ninguno
 	@Test
 	public void testReservaMultipleCoordenadasDuplicadas() {
 
