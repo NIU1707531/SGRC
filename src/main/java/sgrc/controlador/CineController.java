@@ -23,9 +23,21 @@ public class CineController {
     private final Vista vista;
 
     public CineController(CarteleraService carteleraService, ReservaService reservaService, Vista vista) {
+        if (carteleraService == null || reservaService == null || vista == null) {
+            throw new IllegalArgumentException("El controlador necesita los servicios y la vista");
+        }
         this.carteleraService = carteleraService;
         this.reservaService = reservaService;
         this.vista = vista;
+    }
+
+    // Bucle principal: muestra el menú y procesa opciones hasta que el usuario sale
+    public void iniciar() {
+        boolean continuar = true;
+        while (continuar) {
+            vista.mostrarMenu();
+            continuar = procesarOpcion(vista.leerOpcion());
+        }
     }
 
     public List<Pelicula> mostrarCartelera() {
