@@ -11,6 +11,10 @@ public class ReservaService {
     private final SalaRepository salaRepository;
 
     public ReservaService(SalaRepository salaRepository) {
+        // Precondición
+        if (salaRepository == null) {
+            throw new IllegalArgumentException("El repositorio de salas no puede ser nulo");
+        }
         this.salaRepository = salaRepository;
     }
 
