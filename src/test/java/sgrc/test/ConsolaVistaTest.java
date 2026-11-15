@@ -29,8 +29,14 @@ public class ConsolaVistaTest {
 		assertTrue(texto.contains("2. Añadir película"));
 		assertTrue(texto.contains("3. Eliminar película"));
 		assertTrue(texto.contains("4. Ver salas disponibles"));
-		
+		assertTrue(texto.contains("5. Ver asientos de una sala"));
+		assertTrue(texto.contains("6. Reservar asiento"));
+		assertTrue(texto.contains("7. Reservar varios asientos"));
+		assertTrue(texto.contains("8. Cancelar reserva"));
+		assertTrue(texto.contains("0. Salir"));
 	}
+	
+	
 	
 	
 	
