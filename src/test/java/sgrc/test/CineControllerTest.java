@@ -78,4 +78,58 @@ public class CineControllerTest {
         assertTrue(cineController.procesarOpcion(99));
         verify(vista).mostrarError(anyString());
     }
+
+    // ---------- Añadir y eliminar película ----------
+
+    @Test
+    public void testOpcionAnadirPeliculaValida() {
+        when(vista.leerTexto(anyString())).thenReturn("Matrix");
+        when(vista.leerEntero(anyString())).thenReturn(136);
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_ANADIR_PELICULA));
+
+        verify(carteleraService).agregarPelicula(argThat(p -> p.getTitulo().equals("Matrix")
+                && p.getDuracionMinutos() == 136));
+        verify(vista).mostrarMensaje(anyString());
+    }
+
+    @Test
+    public void testOpcionAnadirPeliculaDatosInvalidosMuestraError() {
+        // Duración 0 (valor límite inválido): el Model lanza excepción y el controlador la muestra
+        when(vista.leerTexto(anyString())).thenReturn("Matrix");
+        when(vista.leerEntero(anyString())).thenReturn(0);
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_ANADIR_PELICULA));
+
+        verify(carteleraService, never()).agregarPelicula(any());
+        verify(vista).mostrarError(anyString());
+    }
+
+    @Test
+    public void testOpcionAnadirPeliculaDuplicadaMuestraError() {
+        when(vista.leerTexto(anyString())).thenReturn("Matrix");
+        when(vista.leerEntero(anyString())).thenReturn(136);
+        doThrow(new IllegalStateException("duplicada")).when(carteleraService).agregarPelicula(any());
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_ANADIR_PELICULA));
+        verify(vista).mostrarError("duplicada");
+    }
+
+    @Test
+    public void testOpcionEliminarPelicula() {
+        when(vista.leerTexto(anyString())).thenReturn("Matrix");
+        when(carteleraService.eliminarPelicula("Matrix")).thenReturn(true);
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_ELIMINAR_PELICULA));
+        verify(vista).mostrarMensaje(anyString());
+    }
+
+    @Test
+    public void testOpcionEliminarPeliculaInexistente() {
+        when(vista.leerTexto(anyString())).thenReturn("Matrix");
+        when(carteleraService.eliminarPelicula("Matrix")).thenReturn(false);
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_ELIMINAR_PELICULA));
+        verify(vista).mostrarError(anyString());
+    }
 }
