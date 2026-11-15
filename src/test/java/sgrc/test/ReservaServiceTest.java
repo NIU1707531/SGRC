@@ -297,4 +297,45 @@ public class ReservaServiceTest {
 		// Partición inválida: sin repositorio el servicio no puede funcionar
 		assertThrows(IllegalArgumentException.class, () -> new ReservaService(null));
 	}
+
+	// ===================== cancelarReserva =====================
+	// Particiones: asiento ocupado (se libera) | asiento libre (no hay nada que cancelar)
+	//              | sala inexistente | asiento fuera de límites
+
+	@Test
+	public void testCancelarReservaExitosa() {
+		Sala sala = new Sala(1, 2, 2);
+		sala.reservarAsiento(1, 1);
+		when(salaRepositoryMock.buscarPorId(1)).thenReturn(Optional.of(sala));
+
+		assertTrue(reservaService.cancelarReserva(1, 1, 1));
+		assertTrue(sala.estaAsientoDisponible(1, 1));
+		verify(salaRepositoryMock, times(1)).guardar(sala);
+	}
+
+	@Test
+	public void testCancelarReservaAsientoLibre() {
+		Sala sala = new Sala(1, 2, 2);
+		when(salaRepositoryMock.buscarPorId(1)).thenReturn(Optional.of(sala));
+
+		assertFalse(reservaService.cancelarReserva(1, 0, 0));
+		verify(salaRepositoryMock, never()).guardar(any());
+	}
+
+	@Test
+	public void testCancelarReservaSalaNoExiste() {
+		when(salaRepositoryMock.buscarPorId(99)).thenReturn(Optional.empty());
+
+		assertThrows(IllegalArgumentException.class, () -> reservaService.cancelarReserva(99, 0, 0));
+		verify(salaRepositoryMock, never()).guardar(any());
+	}
+
+	@Test
+	public void testCancelarReservaFueraDeLimites() {
+		// Valor límite exterior: columna = columnas
+		when(salaRepositoryMock.buscarPorId(1)).thenReturn(Optional.of(new Sala(1, 2, 2)));
+
+		assertThrows(IllegalArgumentException.class, () -> reservaService.cancelarReserva(1, 0, 2));
+		verify(salaRepositoryMock, never()).guardar(any());
+	}
 }
