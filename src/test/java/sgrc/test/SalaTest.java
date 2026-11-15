@@ -8,34 +8,92 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SalaTest {
 
-	@Test
-	public void testConstructor()
-	{
-		
-		assertThrows(IllegalArgumentException.class, () -> {
-			new Sala(1,0,0);
-		});
-		
-		assertThrows(IllegalArgumentException.class, () -> {
-			new Sala(1,-1,5);
-		});
-		
-		assertThrows(IllegalArgumentException.class, () -> {
-			new Sala(1,-1,-1);
-		});
-		
-	
-		assertThrows(IllegalArgumentException.class, () -> {
-		    new Sala(1,5,0);
-		});
+    // ============ CAJA NEGRA: constructor, parámetros filas y columnas ============
+    // Particiones: (-inf, 0] inválida | [1, +inf) válida. Límites/frontera: 0 y 1.
 
-		
-		assertDoesNotThrow(() -> {
-		   new Sala(1,1,1);
-		});
-		
-	}
-	
+    @Test
+    @DisplayName("Constructor: filas = 0 (valor límite exterior) lanza excepción")
+    public void testConstructorFilasCeroLimite() {
+        assertThrows(IllegalArgumentException.class, () -> new Sala(1, 0, 5));
+    }
+
+    @Test
+    @DisplayName("Constructor: filas negativas (partición inválida) lanza excepción")
+    public void testConstructorFilasNegativasParticion() {
+        assertThrows(IllegalArgumentException.class, () -> new Sala(1, -1, 5));
+    }
+
+    @Test
+    @DisplayName("Constructor: columnas = 0 (valor límite exterior) lanza excepción")
+    public void testConstructorColumnasCeroLimite() {
+        assertThrows(IllegalArgumentException.class, () -> new Sala(1, 5, 0));
+    }
+
+    @Test
+    @DisplayName("Constructor: columnas negativas (partición inválida) lanza excepción")
+    public void testConstructorColumnasNegativasParticion() {
+        assertThrows(IllegalArgumentException.class, () -> new Sala(1, 5, -1));
+    }
+
+    @Test
+    @DisplayName("Constructor: filas y columnas negativas (ambas inválidas) lanza excepción")
+    public void testConstructorAmbasNegativasParticion() {
+        assertThrows(IllegalArgumentException.class, () -> new Sala(1, -1, -1));
+    }
+
+    @Test
+    @DisplayName("Constructor: sala 1x1 (valores límite interiores) es válida")
+    public void testConstructorMinimoValidoLimite() {
+        Sala sala = new Sala(1, 1, 1);
+        assertEquals(1, sala.getCapacidadTotal());
+    }
+
+    @Test
+    @DisplayName("Constructor: sala 10x12 (partición válida, valor típico) es válida")
+    public void testConstructorValorTipicoParticion() {
+        assertDoesNotThrow(() -> new Sala(3, 10, 12));
+    }
+
+    // ============ CAJA BLANCA: decision coverage + condition coverage ============
+    // Decisión D1: (id <= 0)                      -> C1
+    // Decisión D2: (filas <= 0 || columnas <= 0)  -> C2 || C3
+    //   Caso | C1 | C2 | C3         | D1 | D2
+    //   A    | T  | -  | -          | T  | -    new Sala(0, 2, 2)
+    //   B    | F  | T  | (no eval.) | F  | T    new Sala(1, 0, 2)
+    //   C    | F  | F  | T          | F  | T    new Sala(1, 2, 0)
+    //   D    | F  | F  | F          | F  | F    new Sala(1, 2, 2)
+    // Cada condición y cada decisión toma los valores true y false.
+    @Test
+    @DisplayName("Caja blanca: decision y condition coverage del constructor")
+    public void testConstructorDecisionConditionCoverage() {
+        assertThrows(IllegalArgumentException.class, () -> new Sala(0, 2, 2)); // A
+        assertThrows(IllegalArgumentException.class, () -> new Sala(1, 0, 2)); // B
+        assertThrows(IllegalArgumentException.class, () -> new Sala(1, 2, 0)); // C
+        assertDoesNotThrow(() -> new Sala(1, 2, 2));                          // D
+    }
+
+    // ===================== CAJA NEGRA: constructor, parámetro id =====================
+    // Particiones de id: (-inf, 0] inválida | [1, +inf) válida. Límite/frontera: 0 y 1.
+
+    @Test
+    @DisplayName("Constructor: id = 0 (valor límite exterior) lanza excepción")
+    public void testConstructorIdCeroLimite() {
+        assertThrows(IllegalArgumentException.class, () -> new Sala(0, 2, 2));
+    }
+
+    @Test
+    @DisplayName("Constructor: id negativo (partición inválida) lanza excepción")
+    public void testConstructorIdNegativoParticion() {
+        assertThrows(IllegalArgumentException.class, () -> new Sala(-5, 2, 2));
+    }
+
+    @Test
+    @DisplayName("Constructor: id = 1 (valor límite interior) es válido")
+    public void testConstructorIdUnoLimite() {
+        Sala sala = new Sala(1, 2, 2);
+        assertEquals(1, sala.getId());
+    }
+
     @Test
     @DisplayName("Debe calcular correctamente la capacidad total de la sala")
     public void testCapacidadTotal() {
@@ -201,4 +259,48 @@ public class SalaTest {
         
     
    
+
+    // ===================== contarAsientosLibres =====================
+
+    @Test
+    @DisplayName("Sala nueva: todos los asientos están libres")
+    public void testContarAsientosLibresSalaNueva() {
+        Sala sala = new Sala(1, 3, 4);
+        assertEquals(12, sala.contarAsientosLibres());
+    }
+
+    @Test
+    @DisplayName("Tras reservar un asiento, hay uno libre menos")
+    public void testContarAsientosLibresTrasReservar() {
+        Sala sala = new Sala(1, 3, 4);
+        sala.reservarAsiento(1, 2);
+        assertEquals(11, sala.contarAsientosLibres());
+    }
+
+    // ===================== getters de dimensiones (usados por la Vista) =====================
+
+    @Test
+    @DisplayName("getFilas y getColumnas devuelven las dimensiones de la sala")
+    public void testGettersDimensiones() {
+        Sala sala = new Sala(1, 4, 7);
+        assertEquals(4, sala.getFilas());
+        assertEquals(7, sala.getColumnas());
+    }
+
+    // ===================== reservarAsiento: valores límite =====================
+
+    @Test
+    @DisplayName("reservarAsiento fuera de límites (fila = filas, frontera exterior) lanza excepción")
+    public void testReservarAsientoFueraDeLimites() {
+        Sala sala = new Sala(1, 2, 2);
+        assertThrows(IllegalArgumentException.class, () -> sala.reservarAsiento(2, 0));
+    }
+
+    @Test
+    @DisplayName("reservarAsiento en la última posición (frontera interior) es válido")
+    public void testReservarAsientoUltimaPosicionLimite() {
+        Sala sala = new Sala(1, 2, 2);
+        assertTrue(sala.reservarAsiento(1, 1));
+        assertFalse(sala.estaAsientoDisponible(1, 1));
+    }
 }

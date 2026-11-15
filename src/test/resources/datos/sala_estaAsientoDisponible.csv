@@ -1,0 +1,13 @@
+tipo,descripcion,fila,columna,reservadoAntes,esperado
+particion,asiento interior libre,2,2,false,LIBRE
+particion,asiento interior ocupado,2,2,true,OCUPADO
+limite,primera fila y columna (0 0),0,0,false,LIBRE
+limite,ultima fila y columna (4 4),4,4,false,LIBRE
+limite,ultima posicion ocupada,4,4,true,OCUPADO
+limite,fila -1 (frontera exterior),-1,2,false,EXCEPCION
+limite,fila 5 = filas (frontera exterior),5,2,false,EXCEPCION
+limite,columna -1 (frontera exterior),2,-1,false,EXCEPCION
+limite,columna 5 = columnas (frontera exterior),2,5,false,EXCEPCION
+particion,fila muy negativa,-100,2,false,EXCEPCION
+particion,columna muy grande,2,100,false,EXCEPCION
+particion,fila y columna fuera,10,10,false,EXCEPCION

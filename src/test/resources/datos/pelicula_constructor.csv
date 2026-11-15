@@ -1,0 +1,15 @@
+tipo,descripcion,titulo,duracion,esperado
+particion,titulo y duracion validos,"Inception",148,VALIDA
+particion,titulo nulo,,120,EXCEPCION
+particion,titulo vacio,"",120,EXCEPCION
+particion,titulo solo espacios,"   ",120,EXCEPCION
+limite,titulo de un caracter,"M",90,VALIDA
+particion,titulo con espacios exteriores,"  Dune  ",155,VALIDA
+limite,duracion 0 (frontera exterior inferior),"Corto",0,EXCEPCION
+limite,duracion 1 (frontera interior inferior),"Corto",1,VALIDA
+limite,duracion 2 (frontera interior inferior + 1),"Corto",2,VALIDA
+limite,duracion 599 (frontera interior superior - 1),"Larga",599,VALIDA
+limite,duracion 600 (frontera interior superior),"Larga",600,VALIDA
+limite,duracion 601 (frontera exterior superior),"Larga",601,EXCEPCION
+particion,duracion negativa,"Corto",-15,EXCEPCION
+particion,duracion muy grande,"Larga",10000,EXCEPCION
