@@ -164,4 +164,55 @@ public class CineControllerTest {
         verify(vista).mostrarError("La sala no existe");
         verify(vista, never()).mostrarSala(any());
     }
+
+    // ---------- Reservar y cancelar un asiento ----------
+    // La Vista devuelve sala, fila y columna numeradas desde 1;
+    // el controlador las convierte a índices desde 0 para el Model.
+
+    @Test
+    public void testOpcionReservarAsientoConvierteCoordenadas() {
+        when(vista.leerEntero(anyString())).thenReturn(1, 3, 4); // sala 1, fila 3, columna 4
+        when(reservaService.realizarReserva(1, 2, 3)).thenReturn(true);
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_RESERVAR));
+        verify(reservaService).realizarReserva(1, 2, 3);
+        verify(vista).mostrarMensaje(anyString());
+    }
+
+    @Test
+    public void testOpcionReservarAsientoOcupadoMuestraError() {
+        when(vista.leerEntero(anyString())).thenReturn(1, 1, 1);
+        when(reservaService.realizarReserva(1, 0, 0)).thenReturn(false);
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_RESERVAR));
+        verify(vista).mostrarError(anyString());
+    }
+
+    @Test
+    public void testOpcionReservarAsientoFueraDeLimitesMuestraError() {
+        // Fila 0 introducida por el usuario (valor límite inválido) -> índice -1 -> excepción del Model
+        when(vista.leerEntero(anyString())).thenReturn(1, 0, 1);
+        when(reservaService.realizarReserva(1, -1, 0)).thenThrow(new IllegalArgumentException("fuera"));
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_RESERVAR));
+        verify(vista).mostrarError("fuera");
+    }
+
+    @Test
+    public void testOpcionCancelarReserva() {
+        when(vista.leerEntero(anyString())).thenReturn(2, 1, 1);
+        when(reservaService.cancelarReserva(2, 0, 0)).thenReturn(true);
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_CANCELAR));
+        verify(vista).mostrarMensaje(anyString());
+    }
+
+    @Test
+    public void testOpcionCancelarReservaAsientoLibreMuestraError() {
+        when(vista.leerEntero(anyString())).thenReturn(2, 1, 1);
+        when(reservaService.cancelarReserva(2, 0, 0)).thenReturn(false);
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_CANCELAR));
+        verify(vista).mostrarError(anyString());
+    }
 }
