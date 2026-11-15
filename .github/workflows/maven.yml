@@ -1,5 +1,8 @@
 name: Java CI with Maven
 
+# Se ejecuta en cada push a main y en cada Pull Request hacia main.
+# Junto con la regla de protección de la rama main ("Require status checks
+# to pass before merging"), cualquier fallo impide hacer el merge.
 on:
   push:
     branches: [ "main" ]
@@ -8,18 +11,27 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-        
-    - name: Build and Test with Maven
-      run: mvn -B package --file pom.xml
+
+    # validate -> Checkstyle (calidad de código)
+    # test     -> tests JUnit + Mockito (con -ea para los contratos)
+    # verify   -> informe JaCoCo + comprobación del umbral de cobertura
+    - name: Calidad, tests y cobertura
+      run: mvn -B verify --file pom.xml
+
+    - name: Publicar informe de cobertura JaCoCo
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: jacoco-report
+        path: target/site/jacoco/
