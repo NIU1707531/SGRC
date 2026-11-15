@@ -19,6 +19,9 @@ public class CarteleraService {
         if (pelicula == null) {
             throw new IllegalArgumentException("La película no puede ser nula");
         }
+        if (peliculaRepository.buscarPorTitulo(pelicula.getTitulo()).isPresent()) {
+            throw new IllegalStateException("Ya existe una película con el título " + pelicula.getTitulo());
+        }
         peliculaRepository.guardar(pelicula);
     }
 }
