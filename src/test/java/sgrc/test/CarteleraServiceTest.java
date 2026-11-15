@@ -71,4 +71,31 @@ public class CarteleraServiceTest {
                 () -> carteleraService.agregarPelicula(new Pelicula("Matrix", 140)));
         verify(peliculaRepository, never()).guardar(any());
     }
+
+    // ===================== eliminarPelicula =====================
+    // Particiones: título existente | título inexistente
+
+    @Test
+    public void testEliminarPeliculaExistente() {
+        when(peliculaRepository.buscarPorTitulo("Matrix"))
+                .thenReturn(java.util.Optional.of(new Pelicula("Matrix", 136)));
+
+        assertTrue(carteleraService.eliminarPelicula("Matrix"));
+        verify(peliculaRepository, times(1)).eliminar("Matrix");
+    }
+
+    @Test
+    public void testEliminarPeliculaInexistente() {
+        when(peliculaRepository.buscarPorTitulo("Matrix")).thenReturn(java.util.Optional.empty());
+
+        assertFalse(carteleraService.eliminarPelicula("Matrix"));
+        verify(peliculaRepository, never()).eliminar(any());
+    }
+
+    // ===================== Contrato: precondición del constructor =====================
+
+    @Test
+    public void testConstructorRepositorioNulo() {
+        assertThrows(IllegalArgumentException.class, () -> new CarteleraService(null));
+    }
 }
