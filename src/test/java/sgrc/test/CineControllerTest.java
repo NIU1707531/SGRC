@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sgrc.controlador.CineController;
 import sgrc.modelo.Pelicula;
+import sgrc.modelo.Sala;
 import sgrc.servicio.CarteleraService;
 import sgrc.servicio.ReservaService;
 import sgrc.vista.Vista;
@@ -131,5 +132,36 @@ public class CineControllerTest {
 
         assertTrue(cineController.procesarOpcion(CineController.OPCION_ELIMINAR_PELICULA));
         verify(vista).mostrarError(anyString());
+    }
+
+    // ---------- Salas ----------
+
+    @Test
+    public void testOpcionVerSalasDisponibles() {
+        List<Sala> salas = List.of(new Sala(1, 5, 5));
+        when(reservaService.obtenerSalasDisponibles()).thenReturn(salas);
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_VER_SALAS));
+        verify(vista).mostrarSalas(salas);
+    }
+
+    @Test
+    public void testOpcionVerSalaMuestraElMapa() {
+        Sala sala = new Sala(2, 5, 5);
+        when(vista.leerEntero(anyString())).thenReturn(2);
+        when(reservaService.obtenerSala(2)).thenReturn(sala);
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_VER_SALA));
+        verify(vista).mostrarSala(sala);
+    }
+
+    @Test
+    public void testOpcionVerSalaInexistenteMuestraError() {
+        when(vista.leerEntero(anyString())).thenReturn(9);
+        when(reservaService.obtenerSala(9)).thenThrow(new IllegalArgumentException("La sala no existe"));
+
+        assertTrue(cineController.procesarOpcion(CineController.OPCION_VER_SALA));
+        verify(vista).mostrarError("La sala no existe");
+        verify(vista, never()).mostrarSala(any());
     }
 }
