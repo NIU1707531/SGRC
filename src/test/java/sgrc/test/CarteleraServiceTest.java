@@ -60,4 +60,15 @@ public class CarteleraServiceTest {
         assertThrows(IllegalArgumentException.class, () -> carteleraService.agregarPelicula(null));
         verify(peliculaRepository, never()).guardar(any());
     }
+
+    @Test
+    public void testAgregarPeliculaDuplicada() {
+        // Partición inválida: ya existe una película con ese título en la cartelera
+        Pelicula existente = new Pelicula("Matrix", 136);
+        when(peliculaRepository.buscarPorTitulo("Matrix")).thenReturn(java.util.Optional.of(existente));
+
+        assertThrows(IllegalStateException.class,
+                () -> carteleraService.agregarPelicula(new Pelicula("Matrix", 140)));
+        verify(peliculaRepository, never()).guardar(any());
+    }
 }
