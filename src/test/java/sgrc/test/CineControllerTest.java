@@ -240,4 +240,28 @@ public class CineControllerTest {
         assertTrue(cineController.procesarOpcion(CineController.OPCION_RESERVAR_VARIOS));
         verify(vista).mostrarError(anyString());
     }
+
+    // ---------- Bucle principal ----------
+
+    @Test
+    public void testIniciarMuestraElMenuHastaQueElUsuarioSale() {
+        // El usuario ve la cartelera y después sale
+        when(vista.leerOpcion()).thenReturn(CineController.OPCION_VER_CARTELERA, CineController.OPCION_SALIR);
+        when(carteleraService.obtenerCartelera()).thenReturn(List.of());
+
+        cineController.iniciar();
+
+        verify(vista, times(2)).mostrarMenu();
+        verify(vista, times(2)).leerOpcion();
+        verify(vista).mostrarCartelera(List.of());
+    }
+
+    // ---------- Precondiciones del constructor ----------
+
+    @Test
+    public void testConstructorConDependenciasNulas() {
+        assertThrows(IllegalArgumentException.class, () -> new CineController(null, reservaService, vista));
+        assertThrows(IllegalArgumentException.class, () -> new CineController(carteleraService, null, vista));
+        assertThrows(IllegalArgumentException.class, () -> new CineController(carteleraService, reservaService, null));
+    }
 }
