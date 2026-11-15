@@ -36,6 +36,28 @@ public class SalaTest {
 		
 	}
 	
+    // ===================== CAJA NEGRA: constructor, parámetro id =====================
+    // Particiones de id: (-inf, 0] inválida | [1, +inf) válida. Límite/frontera: 0 y 1.
+
+    @Test
+    @DisplayName("Constructor: id = 0 (valor límite exterior) lanza excepción")
+    public void testConstructorIdCeroLimite() {
+        assertThrows(IllegalArgumentException.class, () -> new Sala(0, 2, 2));
+    }
+
+    @Test
+    @DisplayName("Constructor: id negativo (partición inválida) lanza excepción")
+    public void testConstructorIdNegativoParticion() {
+        assertThrows(IllegalArgumentException.class, () -> new Sala(-5, 2, 2));
+    }
+
+    @Test
+    @DisplayName("Constructor: id = 1 (valor límite interior) es válido")
+    public void testConstructorIdUnoLimite() {
+        Sala sala = new Sala(1, 2, 2);
+        assertEquals(1, sala.getId());
+    }
+
     @Test
     @DisplayName("Debe calcular correctamente la capacidad total de la sala")
     public void testCapacidadTotal() {
