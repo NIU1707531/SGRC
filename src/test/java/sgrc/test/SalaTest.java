@@ -276,4 +276,31 @@ public class SalaTest {
         sala.reservarAsiento(1, 2);
         assertEquals(11, sala.contarAsientosLibres());
     }
+
+    // ===================== getters de dimensiones (usados por la Vista) =====================
+
+    @Test
+    @DisplayName("getFilas y getColumnas devuelven las dimensiones de la sala")
+    public void testGettersDimensiones() {
+        Sala sala = new Sala(1, 4, 7);
+        assertEquals(4, sala.getFilas());
+        assertEquals(7, sala.getColumnas());
+    }
+
+    // ===================== reservarAsiento: valores límite =====================
+
+    @Test
+    @DisplayName("reservarAsiento fuera de límites (fila = filas, frontera exterior) lanza excepción")
+    public void testReservarAsientoFueraDeLimites() {
+        Sala sala = new Sala(1, 2, 2);
+        assertThrows(IllegalArgumentException.class, () -> sala.reservarAsiento(2, 0));
+    }
+
+    @Test
+    @DisplayName("reservarAsiento en la última posición (frontera interior) es válido")
+    public void testReservarAsientoUltimaPosicionLimite() {
+        Sala sala = new Sala(1, 2, 2);
+        assertTrue(sala.reservarAsiento(1, 1));
+        assertFalse(sala.estaAsientoDisponible(1, 1));
+    }
 }
