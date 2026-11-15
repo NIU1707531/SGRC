@@ -26,6 +26,14 @@ public class Sala {
         return id;
     }
 
+    public int getFilas() {
+        return filas;
+    }
+
+    public int getColumnas() {
+        return columnas;
+    }
+
     public int getCapacidadTotal() {
         return filas * columnas;
     }
