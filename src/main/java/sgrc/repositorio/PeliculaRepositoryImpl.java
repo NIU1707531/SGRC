@@ -26,8 +26,13 @@ public class PeliculaRepositoryImpl implements PeliculaRepository {
             return Optional.empty();
         }
         return cartelera.stream()
-                .filter(p -> p.getTitulo().equalsIgnoreCase(titulo))
+                .filter(p -> mismoTitulo(p, titulo))
                 .findFirst();
+    }
+
+    // Compara títulos sin distinguir mayúsculas ni espacios exteriores
+    private boolean mismoTitulo(Pelicula pelicula, String titulo) {
+        return pelicula.getTitulo().equalsIgnoreCase(titulo.trim());
     }
 
     @Override
