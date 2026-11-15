@@ -65,4 +65,17 @@ public class Sala {
     	}
     	return false;
     }
+
+    // Cuenta los asientos libres recorriendo la matriz (bucle anidado filas x columnas)
+    public int contarAsientosLibres() {
+        int libres = 0;
+        for (int fila = 0; fila < filas; fila++) {
+            for (int columna = 0; columna < columnas; columna++) {
+                if (!asientos[fila][columna]) {
+                    libres++;
+                }
+            }
+        }
+        return libres;
+    }
 }
