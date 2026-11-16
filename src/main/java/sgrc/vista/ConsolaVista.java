@@ -41,7 +41,7 @@ public class ConsolaVista implements Vista {
 
 	@Override
 	public void mostrarMensaje(String mensaje) {
-		// TODO Auto-generated method stub
+		   System.out.println(mensaje);
 
 	}
 
