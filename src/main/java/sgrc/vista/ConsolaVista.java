@@ -69,7 +69,7 @@ public class ConsolaVista implements Vista {
 
 	@Override
 	public void mostrarSala(Sala sala) {
-		// TODO Auto-generated method stub
+		System.out.println("Sala " + sala.getId());
 
 	}
 
