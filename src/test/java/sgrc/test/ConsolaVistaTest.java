@@ -31,6 +31,9 @@ public class ConsolaVistaTest {
 	private final PrintStream errorOriginal = System.err;
 	private final InputStream entradaOriginal = System.in;
 
+	// Sin terminal real (Eclipse, Maven) la pantalla se "limpia" con muchas líneas en blanco
+	private static final String PANTALLA_LIMPIA = "\n".repeat(30);
+
 	// usamos buffers porque necesitamos verificar lo que sale por pantalla
 	private ByteArrayOutputStream salida;
 	private ByteArrayOutputStream error;
@@ -86,7 +89,7 @@ public class ConsolaVistaTest {
 	// El cartel de bienvenida se muestra solo la primera vez que aparece el menú
 	@Test
 	public void testBienvenidaSoloLaPrimeraVez() {
-		ConsolaVista vista = new ConsolaVista();
+		ConsolaVista vista = vistaConEntrada("\n");
 		vista.mostrarMenu();
 		vista.mostrarMenu();
 		String texto = textoSalida();
@@ -94,6 +97,37 @@ public class ConsolaVistaTest {
 		int primera = texto.indexOf("Gestión de Reservas de Cine");
 		assertTrue(primera >= 0);
 		assertEquals(-1, texto.indexOf("Gestión de Reservas de Cine", primera + 1));
+	}
+
+	// La primera vez el menú sale directamente, sin pausa
+	@Test
+	public void testPrimerMenuSinPausa() {
+		vistaConEntrada("").mostrarMenu();
+		assertFalse(textoSalida().contains("Pulsa Enter"));
+	}
+
+	// A partir de la segunda vez se espera a que el usuario lea el resultado antes de limpiar
+	@Test
+	public void testMenuEsperaEnterYLimpiaPantalla() {
+		ConsolaVista vista = vistaConEntrada("\nsiguiente\n");
+		vista.mostrarMenu();
+		salida.reset();
+		vista.mostrarMenu();
+		String texto = textoSalida();
+
+		assertTrue(texto.contains("Pulsa Enter para volver al menú"));
+		assertTrue(texto.contains(PANTALLA_LIMPIA));
+		assertTrue(texto.indexOf(PANTALLA_LIMPIA) < texto.indexOf("MENÚ PRINCIPAL"));
+		// La pausa consume solo una línea: la siguiente queda para la próxima lectura
+		assertEquals("siguiente", vista.leerTexto(""));
+	}
+
+	// Al elegir una opción válida se limpia la pantalla para mostrar solo su resultado
+	@Test
+	public void testLeerOpcionLimpiaPantalla() {
+		ConsolaVista vista = vistaConEntrada("1\n");
+		vista.leerOpcion();
+		assertTrue(textoSalida().contains(PANTALLA_LIMPIA));
 	}
 
 	@Test
