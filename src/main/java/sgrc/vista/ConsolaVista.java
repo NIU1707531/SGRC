@@ -35,8 +35,8 @@ public class ConsolaVista implements Vista {
 
 	@Override
 	public int leerEntero(String mensaje) {
-		// TODO Auto-generated method stub
-		return 0;
+	    System.out.print(mensaje);
+	    return Integer.parseInt(scanner.nextLine().trim());
 	}
 
 	@Override
