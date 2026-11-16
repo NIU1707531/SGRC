@@ -159,6 +159,7 @@ public class ConsolaVistaTest {
 	    }
 
 	    assertTrue(buffer.toString().contains("Titanic"));
+	    assertTrue(buffer.toString().contains("195 minutos"));
 
 	}
 	
