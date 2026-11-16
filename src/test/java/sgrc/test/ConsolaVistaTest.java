@@ -207,6 +207,7 @@ public class ConsolaVistaTest {
 
 	    assertTrue(buffer.toString().contains("Sala 7"));
 	    assertTrue(buffer.toString().contains("Fila 1: L X L"));
+	    assertTrue(buffer.toString().contains("Fila 2: L L L"));
 	}
 	
 	
