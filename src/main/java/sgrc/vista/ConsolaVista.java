@@ -70,6 +70,20 @@ public class ConsolaVista implements Vista {
 	@Override
 	public void mostrarSala(Sala sala) {
 		System.out.println("Sala " + sala.getId());
+		
+	    for (int fila = 0; fila < sala.getFilas(); fila++) {
+	        System.out.print("Fila " + (fila + 1) + ":");
+
+	        for (int columna = 0; columna < sala.getColumnas(); columna++) {
+	            if (sala.estaAsientoDisponible(fila, columna)) {
+	                System.out.print(" L");
+	            } else {
+	                System.out.print(" X");
+	            }
+	        }
+
+	        System.out.println();
+	    }
 
 	}
 
