@@ -115,6 +115,25 @@ public class ConsolaVistaTest {
 	    assertTrue(buffer.toString().contains("Reserva realizada"));
 	}
 	
+	@Test
+	public void testMostrarError() {
+
+	    PrintStream salidaOriginal = System.err;
+	    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+	    try {
+	        System.setErr(new PrintStream(buffer));
+
+	        ConsolaVista vista = new ConsolaVista();
+	        vista.mostrarError("El asiento ya está ocupado");
+
+	    } finally {
+	        System.setErr(salidaOriginal);
+	    }
+
+	    assertTrue(buffer.toString().contains("El asiento ya está ocupado"));
+	}
+	
 	
 	
 	
