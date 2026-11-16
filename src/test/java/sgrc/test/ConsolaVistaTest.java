@@ -96,6 +96,25 @@ public class ConsolaVistaTest {
 	    }
 	}
 	
+	@Test
+	public void testMostrarMensaje() {
+
+	    PrintStream salidaOriginal = System.out;
+	    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+	    try {
+	        System.setOut(new PrintStream(buffer));
+
+	        ConsolaVista vista = new ConsolaVista();
+	        vista.mostrarMensaje("Reserva realizada");
+
+	    } finally {
+	        System.setOut(salidaOriginal);
+	    }
+
+	    assertTrue(buffer.toString().contains("Reserva realizada"));
+	}
+	
 	
 	
 	
