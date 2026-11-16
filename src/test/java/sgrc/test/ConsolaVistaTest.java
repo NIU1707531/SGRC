@@ -8,6 +8,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+
+import sgrc.modelo.Pelicula;
+import java.util.List;
+
 public class ConsolaVistaTest {
 	
 	@Test
@@ -132,6 +136,30 @@ public class ConsolaVistaTest {
 	    }
 
 	    assertTrue(buffer.toString().contains("El asiento ya está ocupado"));
+	}
+	
+	@Test
+	public void testMostrarCartelera() {
+
+	    Pelicula pelicula = new Pelicula("Titanic", 195);
+
+	    List<Pelicula> peliculas = List.of(pelicula);
+	    
+	    PrintStream salidaOriginal = System.out;
+	    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+	    try {
+	        System.setOut(new PrintStream(buffer));
+
+	        ConsolaVista vista = new ConsolaVista();
+	        vista.mostrarCartelera(peliculas);
+
+	    } finally {
+	        System.setOut(salidaOriginal);
+	    }
+
+	    assertTrue(buffer.toString().contains("Titanic"));
+
 	}
 	
 	
