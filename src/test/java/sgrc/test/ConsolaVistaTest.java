@@ -186,6 +186,28 @@ public class ConsolaVistaTest {
 	    assertTrue(buffer.toString().contains("Sala 7"));
 	}
 	
+	@Test
+	public void testMostrarSala() {
+
+	    Sala sala = new Sala(7, 2, 3);
+
+	    sala.reservarAsiento(0, 1);
+	    PrintStream salidaOriginal = System.out;
+	    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+	    try {
+	        System.setOut(new PrintStream(buffer));
+
+	        ConsolaVista vista = new ConsolaVista();
+	        vista.mostrarSala(sala);
+
+	    } finally {
+	        System.setOut(salidaOriginal);
+	    }
+
+	    assertTrue(buffer.toString().contains("Sala 7"));
+
+	}
 	
 	
 	
