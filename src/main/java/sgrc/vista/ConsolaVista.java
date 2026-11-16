@@ -53,7 +53,9 @@ public class ConsolaVista implements Vista {
 
 	@Override
 	public void mostrarCartelera(List<Pelicula> peliculas) {
-		// TODO Auto-generated method stub
+	    for (Pelicula pelicula : peliculas) {
+	    	System.out.println(pelicula.getTitulo() + " - " + pelicula.getDuracionMinutos() + " minutos");
+	    }
 
 	}
 
