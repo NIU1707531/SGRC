@@ -56,6 +56,27 @@ public class ConsolaVistaTest {
 	    }
 	}
 	
+	@Test
+	public void testLeerTexto() {
+	    ByteArrayInputStream entrada =
+	            new ByteArrayInputStream("Titanic\n".getBytes());
+
+	    InputStream entradaOriginal = System.in;
+
+	    try {
+	        System.setIn(entrada);
+
+	        ConsolaVista vista = new ConsolaVista();
+	        String texto = vista.leerTexto("Título de la película: ");
+
+	        assertEquals("Titanic", texto);
+
+	    } finally {
+	        System.setIn(entradaOriginal);
+	    }
+	}
+	
+	
 	
 	
 	
