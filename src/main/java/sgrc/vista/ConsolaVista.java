@@ -47,7 +47,7 @@ public class ConsolaVista implements Vista {
 
 	@Override
 	public void mostrarError(String mensaje) {
-		// TODO Auto-generated method stub
+	    System.err.println(mensaje);
 
 	}
 
