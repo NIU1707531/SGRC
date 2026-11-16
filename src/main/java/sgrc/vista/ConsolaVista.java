@@ -1,5 +1,6 @@
 package sgrc.vista;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -29,6 +30,9 @@ public class ConsolaVista implements Vista {
     // Número de bloques de la barra de ocupación de una sala
     private static final int ANCHO_BARRA = 10;
 
+    // Líneas en blanco para "limpiar" la consola de Eclipse, que no admite borrado de pantalla
+    private static final String LINEAS_LIMPIEZA = "\n".repeat(50);
+
     private static final String ASIENTO_LIBRE = "○";
     private static final String ASIENTO_OCUPADO = "●";
 
@@ -53,6 +57,10 @@ public class ConsolaVista implements Vista {
         if (!bienvenidaMostrada) {
             mostrarBienvenida();
             bienvenidaMostrada = true;
+        } else {
+            // Se deja leer el resultado de la opción anterior y se limpia antes de volver al menú
+            esperarEnter();
+            limpiarPantalla();
         }
         out.println();
         out.println("┌" + repetir("─", ANCHO) + "┐");
@@ -107,10 +115,46 @@ public class ConsolaVista implements Vista {
     // --------------------------------------------------------- Entrada de datos
 
     // Si se acaba la entrada (Ctrl+Z / Ctrl+D) se devuelve "Salir" para terminar sin errores
+    // Tras elegir una opción se limpia la pantalla para que su resultado aparezca solo
     @Override
     public int leerOpcion() {
         Integer opcion = leerNumero("Elige una opción: ");
+        limpiarPantalla();
         return opcion == null ? 0 : opcion;
+    }
+
+    private void esperarEnter() {
+        System.out.println();
+        System.out.print("  " + color(AMARILLO, "Pulsa Enter para volver al menú..."));
+        if (scanner.hasNextLine()) {
+            scanner.nextLine();
+        }
+    }
+
+    /**
+     * Limpia la pantalla.
+     * - Terminal real (System.console() != null): "cls" en Windows o secuencia ANSI en Linux/macOS.
+     * - Consola de Eclipse o tests (sin terminal): no se puede borrar desde el programa,
+     *   así que se empuja el contenido anterior fuera de la vista con líneas en blanco.
+     */
+    private void limpiarPantalla() {
+        System.out.flush();
+        if (System.console() == null) {
+            System.out.print(LINEAS_LIMPIEZA);
+            return;
+        }
+        if (System.getProperty("os.name", "").startsWith("Windows")) {
+            try {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } catch (IOException e) {
+                System.out.print(LINEAS_LIMPIEZA);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        } else {
+            System.out.print("\u001B[H\u001B[2J");
+            System.out.flush();
+        }
     }
 
     @Override
