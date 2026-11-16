@@ -11,6 +11,7 @@ import java.io.InputStream;
 
 import sgrc.modelo.Pelicula;
 import java.util.List;
+import sgrc.modelo.Sala;
 
 public class ConsolaVistaTest {
 	
@@ -161,6 +162,28 @@ public class ConsolaVistaTest {
 	    assertTrue(buffer.toString().contains("Titanic"));
 	    assertTrue(buffer.toString().contains("195 minutos"));
 
+	}
+	
+	@Test
+	public void testMostrarSalas() {
+
+	    Sala sala = new Sala(7, 3, 4);
+	    List<Sala> salas = List.of(sala);
+
+	    PrintStream salidaOriginal = System.out;
+	    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+	    try {
+	        System.setOut(new PrintStream(buffer));
+
+	        ConsolaVista vista = new ConsolaVista();
+	        vista.mostrarSalas(salas);
+
+	    } finally {
+	        System.setOut(salidaOriginal);
+	    }
+
+	    assertTrue(buffer.toString().contains("Sala 7"));
 	}
 	
 	
