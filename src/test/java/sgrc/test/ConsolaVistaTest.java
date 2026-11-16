@@ -76,6 +76,26 @@ public class ConsolaVistaTest {
 	    }
 	}
 	
+	@Test
+	public void testLeerEntero() {
+	    ByteArrayInputStream entrada =
+	            new ByteArrayInputStream("2\n".getBytes());
+
+	    InputStream entradaOriginal = System.in;
+
+	    try {
+	        System.setIn(entrada);
+
+	        ConsolaVista vista = new ConsolaVista();
+	        int texto = vista.leerEntero("Duración de la película en minutos: ");
+
+	        assertEquals(2, texto);
+
+	    } finally {
+	        System.setIn(entradaOriginal);
+	    }
+	}
+	
 	
 	
 	
