@@ -24,6 +24,7 @@ public class ReservaServiceMockManualTest {
     private SalaRepositoryMock repositorioMock;
     private ReservaService reservaService;
 
+    // Antes de cada test: mock nuevo (sin salas ni llamadas registradas) y servicio que lo usa
     @BeforeEach
     public void setUp() {
         repositorioMock = new SalaRepositoryMock();
@@ -50,6 +51,7 @@ public class ReservaServiceMockManualTest {
         repositorioMock.setSalaADevolver(sala);
 
         assertFalse(reservaService.realizarReserva(1, 0, 0));
+        // Si la reserva falla no hay cambios, así que la sala no debe guardarse
         assertEquals(0, repositorioMock.getVecesGuardar());
     }
 
@@ -67,6 +69,7 @@ public class ReservaServiceMockManualTest {
         repositorioMock.setSalaADevolver(sala);
 
         assertTrue(reservaService.realizarReservaMultiple(1, List.of(new int[]{0, 0}, new int[]{1, 2})));
+        // Se reservan 2 asientos pero la sala se guarda una sola vez; quedan 6 - 2 = 4 libres
         assertEquals(1, repositorioMock.getVecesGuardar());
         assertEquals(4, sala.contarAsientosLibres());
     }
@@ -86,6 +89,7 @@ public class ReservaServiceMockManualTest {
         List<Sala> salas = List.of(new Sala(1, 1, 1), new Sala(2, 1, 1));
         repositorioMock.setSalasADevolver(salas);
 
+        // El servicio solo delega: devuelve tal cual lo que le da el repositorio
         assertEquals(salas, reservaService.obtenerSalasDisponibles());
         assertEquals(salas, reservaService.obtenerSalas());
     }
