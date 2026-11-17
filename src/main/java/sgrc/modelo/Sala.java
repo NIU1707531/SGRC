@@ -15,6 +15,7 @@ public class Sala {
     private final int id;
     private final int filas;
     private final int columnas;
+    // asientos[fila][columna]: true si está ocupado. Índices desde 0.
     private final boolean[][] asientos;
 
     /**
@@ -33,6 +34,7 @@ public class Sala {
         this.id = id;
         this.filas = filas;
         this.columnas = columnas;
+        // Java inicializa los boolean a false, así que todos los asientos empiezan libres
         this.asientos = new boolean[filas][columnas];
 
         // Postcondición: todos los asientos libres
@@ -52,6 +54,7 @@ public class Sala {
         return columnas;
     }
 
+    // Número total de asientos de la sala (libres + ocupados)
     public int getCapacidadTotal() {
         return filas * columnas;
     }
@@ -74,9 +77,11 @@ public class Sala {
      * libre menos) y false si ya estaba ocupado (el estado no cambia).
      */
     public boolean reservarAsiento(int fila, int columna) {
+        // estaAsientoDisponible también valida los límites (lanza excepción si no existe)
         if (!estaAsientoDisponible(fila, columna)) {
             return false;
         }
+        // Se guarda el número de libres para comprobar la postcondición después
         int libresAntes = contarAsientosLibres();
         asientos[fila][columna] = true;
 

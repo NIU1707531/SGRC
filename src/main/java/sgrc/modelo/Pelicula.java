@@ -11,6 +11,7 @@ package sgrc.modelo;
  *  - La clase es inmutable, así que el invariante se mantiene siempre.
  */
 public class Pelicula {
+    // Duración máxima permitida en minutos (10 horas)
     public static final int DURACION_MAXIMA = 600;
 
     private final String titulo;
@@ -28,6 +29,7 @@ public class Pelicula {
         if (duracionMinutos <= 0 || duracionMinutos > DURACION_MAXIMA) {
             throw new IllegalArgumentException("La duracion debe estar entre 1 y " + DURACION_MAXIMA + " minutos");
         }
+        // Se guarda sin espacios al principio ni al final ("  Dune " -> "Dune")
         this.titulo = titulo.trim();
         this.duracionMinutos = duracionMinutos;
 

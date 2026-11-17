@@ -37,6 +37,7 @@ public class ReservaService {
     public boolean realizarReserva(int salaId, int fila, int columna) {
         Sala sala = obtenerSala(salaId);
 
+        // La sala hace la reserva; el servicio solo guarda los cambios si ha ido bien
         boolean exito = sala.reservarAsiento(fila, columna);
         if (exito) {
             salaRepository.guardar(sala);
@@ -61,6 +62,8 @@ public class ReservaService {
         }
 
         // 1er bucle: validar todas las posiciones antes de reservar ninguna
+        // (así, si falla alguna, la sala no queda a medias). El Set guarda cada
+        // posición como texto "fila,columna" para detectar coordenadas repetidas.
         Set<String> posicionesVistas = new HashSet<>();
         for (int[] posicion : asientos) {
             if (posicion == null || posicion.length != 2) {
@@ -70,6 +73,7 @@ public class ReservaService {
             int fila = posicion[0];
             int columna = posicion[1];
 
+            // add() devuelve false si la posición ya estaba en el Set
             if (!posicionesVistas.add(fila + "," + columna)) {
                 return false; // coordenada repetida
             }
@@ -82,6 +86,7 @@ public class ReservaService {
         for (int[] posicion : asientos) {
             sala.reservarAsiento(posicion[0], posicion[1]);
         }
+        // Se guarda la sala una sola vez, al final, con todos los asientos ya reservados
         salaRepository.guardar(sala);
 
         // Postcondición
@@ -112,10 +117,12 @@ public class ReservaService {
                 .orElseThrow(() -> new IllegalArgumentException("La sala no existe"));
     }
 
+    // Devuelve todas las salas, incluidas las que están llenas
     public List<Sala> obtenerSalas() {
         return salaRepository.obtenerTodas();
     }
 
+    // Devuelve solo las salas que tienen al menos un asiento libre
     public List<Sala> obtenerSalasDisponibles() {
         return salaRepository.obtenerSalasDisponibles();
     }

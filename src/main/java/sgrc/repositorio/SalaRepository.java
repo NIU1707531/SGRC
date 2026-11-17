@@ -4,6 +4,13 @@ import sgrc.modelo.Sala;
 import java.util.Optional;
 import java.util.List;
 
+/**
+ * Repositorio de salas (capa de acceso a datos del Model).
+ *
+ * Es una interfaz para que ReservaService no dependa de cómo se guardan las salas:
+ * en la aplicación se usa EnMemoriaSalaRepository y en los tests se sustituye por
+ * un mock (SalaRepositoryMock o Mockito).
+ */
 public interface SalaRepository {
 	// Busca una sala por su id (Optional vacío si no existe)
 	Optional<Sala> buscarPorId(int id);

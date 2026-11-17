@@ -44,7 +44,9 @@ public class ConsolaVista implements Vista {
     private static final String AMARILLO = "\u001B[33m";
     private static final String CIAN = "\u001B[36m";
 
+    // Un único Scanner para toda la aplicación (crear varios sobre System.in da problemas)
     private final Scanner scanner = new Scanner(System.in);
+    // true solo si se arranca con -Dsgrc.colores=true
     private final boolean colores = Boolean.getBoolean("sgrc.colores");
     // El cartel de bienvenida se muestra solo la primera vez que aparece el menú
     private boolean bienvenidaMostrada = false;
@@ -91,6 +93,7 @@ public class ConsolaVista implements Vista {
         System.out.println("│  " + texto + repetir(" ", ANCHO - 2 - visible) + "│");
     }
 
+    // Cartel con doble marco que se muestra al arrancar la aplicación
     private void mostrarBienvenida() {
         String doble = repetir("═", ANCHO);
         System.out.println("╔" + doble + "╗");
@@ -123,6 +126,7 @@ public class ConsolaVista implements Vista {
         return opcion == null ? 0 : opcion;
     }
 
+    // Pausa hasta que el usuario pulsa Enter (si no queda entrada, no espera)
     private void esperarEnter() {
         System.out.println();
         System.out.print("  " + color(AMARILLO, "Pulsa Enter para volver al menú..."));
@@ -145,18 +149,23 @@ public class ConsolaVista implements Vista {
         }
         if (System.getProperty("os.name", "").startsWith("Windows")) {
             try {
+                // inheritIO() hace que "cls" actúe sobre la misma consola que el programa
                 new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
             } catch (IOException e) {
                 System.out.print(LINEAS_LIMPIEZA);
             } catch (InterruptedException e) {
+                // Se restaura el estado de interrupción del hilo, como recomienda Java
                 Thread.currentThread().interrupt();
             }
         } else {
+            // Secuencias ANSI: ESC[H mueve el cursor arriba a la izquierda y ESC[2J borra la pantalla
             System.out.print("\u001B[H\u001B[2J");
             System.out.flush();
         }
     }
 
+    // Lee una línea completa (los títulos pueden tener espacios).
+    // Si no queda entrada se lanza IllegalStateException, que el Controlador muestra como error.
     @Override
     public String leerTexto(String mensaje) {
         System.out.print(prompt(mensaje));
@@ -166,6 +175,7 @@ public class ConsolaVista implements Vista {
         return scanner.nextLine();
     }
 
+    // Igual que leerNumero, pero si se acaba la entrada lanza excepción en vez de devolver null
     @Override
     public int leerEntero(String mensaje) {
         Integer numero = leerNumero(mensaje);
@@ -185,21 +195,25 @@ public class ConsolaVista implements Vista {
             if (!scanner.hasNextLine()) {
                 return null;
             }
+            // Se lee la línea entera (y no nextInt) para no dejar restos en el buffer
             String linea = scanner.nextLine().trim();
             try {
                 return Integer.parseInt(linea);
             } catch (NumberFormatException e) {
+                // No es un número: se avisa y el bucle vuelve a pedirlo
                 mostrarError("Introduce un número entero (has escrito \"" + linea + "\")");
             }
         }
     }
 
+    // Formato común de todas las preguntas al usuario: "  » mensaje"
     private String prompt(String mensaje) {
         return "  " + color(AMARILLO, "»") + " " + mensaje;
     }
 
     // ----------------------------------------------------------------- Mensajes
 
+    // Mensajes de confirmación (p. ej. "Reserva realizada")
     @Override
     public void mostrarMensaje(String mensaje) {
         System.out.println();
@@ -209,6 +223,7 @@ public class ConsolaVista implements Vista {
     // Los errores van a System.err: Eclipse los pinta en rojo
     @Override
     public void mostrarError(String mensaje) {
+        // Se vacía System.out antes para que el error no salga desordenado respecto al resto
         System.out.flush();
         System.err.println("  " + color(ROJO, "[!] " + mensaje));
         System.err.flush();
@@ -227,6 +242,7 @@ public class ConsolaVista implements Vista {
         String unidad = peliculas.size() == 1 ? " película" : " películas";
         System.out.println("  " + color(NEGRITA, "CARTELERA") + " · " + peliculas.size() + unidad);
 
+        // Ancho de cada columna de la tabla: "#", "Título" y "Duración"
         int[] anchos = {5, ANCHO_TITULO + 2, 24};
         System.out.println(bordeTabla("┌", "┬", "┐", anchos));
         System.out.println(filaTabla(anchos, "#", "Título", "Duración"));
@@ -263,6 +279,7 @@ public class ConsolaVista implements Vista {
         System.out.println("  " + color(NEGRITA, "SALAS CON ASIENTOS LIBRES") + " · " + salas.size()
                 + (salas.size() == 1 ? " sala" : " salas"));
 
+        // Ancho de cada columna: "Sala", "Tamaño", "Libres" y "Ocupación" (barra + porcentaje)
         int[] anchos = {10, 9, 11, ANCHO_BARRA + 8};
         System.out.println(bordeTabla("┌", "┬", "┐", anchos));
         System.out.println(filaTabla(anchos, "Sala", "Tamaño", "Libres", "Ocupación"));
@@ -284,6 +301,7 @@ public class ConsolaVista implements Vista {
     // Barra de 10 bloques con el porcentaje de asientos ocupados, p. ej. "███░░░░░░░  30%"
     private static String barraOcupacion(int ocupados, int capacidad) {
         int porcentaje = ocupados * 100 / capacidad;
+        // Bloques llenos redondeados al más cercano (sumar capacidad / 2 antes de dividir)
         int llenos = (ocupados * ANCHO_BARRA + capacidad / 2) / capacidad;
         return repetir("█", llenos) + repetir("░", ANCHO_BARRA - llenos) + String.format(" %3d%%", porcentaje);
     }
@@ -291,11 +309,13 @@ public class ConsolaVista implements Vista {
     @Override
     public void mostrarSala(Sala sala) {
         int columnas = sala.getColumnas();
+        // Margen del ancho de "  Fila nn │" para alinear la pantalla y los números con los asientos
         String margen = repetir(" ", 11);
         System.out.println();
         System.out.println("  " + color(NEGRITA, "Sala " + sala.getId()) + " · " + sala.getFilas()
                 + " filas x " + columnas + " asientos");
         System.out.println();
+        // Cada asiento ocupa 3 caracteres; la pantalla tiene un ancho mínimo para que se lea el texto
         System.out.println(margen + pantalla(Math.max(columnas * 3, 12)));
 
         // Números de asiento (columna) encima de cada asiento, numerados desde 1
@@ -355,15 +375,18 @@ public class ConsolaVista implements Vista {
         return texto.length() <= ancho ? texto : texto.substring(0, ancho - 1) + "…";
     }
 
+    // Rellena con espacios a ambos lados para centrar el texto en el ancho indicado
     private static String centrar(String texto, int ancho) {
         int izquierda = (ancho - texto.length()) / 2;
         return repetir(" ", izquierda) + texto + repetir(" ", ancho - texto.length() - izquierda);
     }
 
+    // Como String.repeat, pero devuelve "" si 'veces' es negativo (evita una excepción)
     private static String repetir(String texto, int veces) {
         return veces <= 0 ? "" : texto.repeat(veces);
     }
 
+    // Aplica el color ANSI al texto solo si los colores están activados
     private String color(String codigo, String texto) {
         return colores ? codigo + texto + RESET : texto;
     }
