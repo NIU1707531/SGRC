@@ -6,8 +6,12 @@ import java.util.List;
 
 /**
  * Servicio del Model que gestiona la cartelera de películas.
+ *
+ * Contiene las reglas de negocio de la cartelera (por ejemplo, que no haya dos
+ * películas con el mismo título) y delega el almacenamiento en el repositorio.
  */
 public class CarteleraService {
+    // Se recibe por el constructor para poder usar un mock en los tests
     private final PeliculaRepository peliculaRepository;
 
     /** Pre: peliculaRepository != null. */
@@ -18,6 +22,7 @@ public class CarteleraService {
         this.peliculaRepository = peliculaRepository;
     }
 
+    // Devuelve todas las películas de la cartelera (lista vacía si no hay ninguna)
     public List<Pelicula> obtenerCartelera() {
         return peliculaRepository.obtenerTodas();
     }
@@ -30,6 +35,7 @@ public class CarteleraService {
         if (pelicula == null) {
             throw new IllegalArgumentException("La película no puede ser nula");
         }
+        // Regla de negocio: no se permiten títulos repetidos (sin distinguir mayúsculas)
         if (peliculaRepository.buscarPorTitulo(pelicula.getTitulo()).isPresent()) {
             throw new IllegalStateException("Ya existe una película con el título " + pelicula.getTitulo());
         }
@@ -38,6 +44,7 @@ public class CarteleraService {
 
     /** Elimina la película. Devuelve false si no existía. */
     public boolean eliminarPelicula(String titulo) {
+        // Se comprueba antes si existe para poder informar al usuario con el valor devuelto
         if (peliculaRepository.buscarPorTitulo(titulo).isEmpty()) {
             return false;
         }

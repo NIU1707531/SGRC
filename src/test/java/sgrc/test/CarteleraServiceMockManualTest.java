@@ -23,6 +23,7 @@ public class CarteleraServiceMockManualTest {
     private PeliculaRepositoryMock repositorioMock;
     private CarteleraService carteleraService;
 
+    // Antes de cada test: mock nuevo (sin películas ni llamadas registradas) y servicio que lo usa
     @BeforeEach
     public void setUp() {
         repositorioMock = new PeliculaRepositoryMock();
@@ -35,6 +36,7 @@ public class CarteleraServiceMockManualTest {
         repositorioMock.precargar(pelicula);
 
         assertEquals(List.of(pelicula), carteleraService.obtenerCartelera());
+        // El mock cuenta las llamadas: el servicio debe consultar el repositorio exactamente una vez
         assertEquals(1, repositorioMock.getVecesObtenerTodas());
     }
 
@@ -51,6 +53,7 @@ public class CarteleraServiceMockManualTest {
     public void testAgregarPeliculaDuplicadaNoSeGuarda() {
         repositorioMock.precargar(new Pelicula("Matrix", 136));
 
+        // Mismo título con otras mayúsculas: se rechaza y no se llega a llamar a guardar()
         assertThrows(IllegalStateException.class,
                 () -> carteleraService.agregarPelicula(new Pelicula("matrix", 120)));
         assertTrue(repositorioMock.getGuardadas().isEmpty());
@@ -66,6 +69,7 @@ public class CarteleraServiceMockManualTest {
 
     @Test
     public void testEliminarPeliculaInexistenteNoLlamaAEliminar() {
+        // Repositorio vacío: el servicio devuelve false sin pedir al repositorio que elimine
         assertFalse(carteleraService.eliminarPelicula("Matrix"));
         assertTrue(repositorioMock.getEliminadas().isEmpty());
     }
